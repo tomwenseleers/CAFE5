@@ -1,4 +1,7 @@
-# Validation report: opt-in BDI extension
+# Initial validation report: homogeneous BDI extension
+
+This report records the first implementation. The subsequent gamma/error and
+branch-testing additions have a [separate validation report](innovation_mixture_validation.md).
 
 Validation session: 2026-09-17.
 Base CAFE5 commit: `b9e3b2e55a2412fca94f69ae42a2028cfeca3e95`.

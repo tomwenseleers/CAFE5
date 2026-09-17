@@ -17,3 +17,7 @@ jobs:
         run: python3 scripts/innovation/validate.py build/cafe5 validation/numerical
       - name: Simulation recovery and fixed-parameter calibration
         run: python3 scripts/innovation/recovery.py build/cafe5 validation/recovery --replicates 12
+      - name: Gamma and error mixture validation
+        run: python3 scripts/innovation/validate_mixtures.py build/cafe5 validation/mixtures
+      - name: Branch test calibration smoke check
+        run: python3 scripts/innovation/validate_branches.py build/cafe5 validation/branches --outer-replicates 1

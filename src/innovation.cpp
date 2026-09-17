@@ -1,4 +1,5 @@
 #include "innovation.h"
+#include "gamma.h"
 #include "clade.h"
 #include "optimizer.h"
 #include "optimizer_scorer.h"
@@ -62,8 +63,9 @@ std::vector<double> transition(int maximum, double lambda, double nu, double tim
 }
 
 struct Options {
-    std::string tree,input,prefix="innovation",root_file,matrix_file;
-    double lambda=-1,nu=-1,root_mean=-1,matrix_time=-1;
+    std::string tree,input,prefix="innovation",root_file,matrix_file,error_file;
+    double lambda=-1,nu=-1,root_mean=-1,matrix_time=-1,alpha=-1,epsilon=0;
+    int categories=1; bool estimate_epsilon=false,epsilon_set=false;
     int maximum=80,iterations=400,starts=3,simulate=0,bootstrap=0,threads=1;
     unsigned seed=20260917;
     bool unconditioned=false,check=true,likelihood_only=false;
@@ -88,6 +90,65 @@ static std::ofstream output(const std::string& path) {
     std::ofstream f(path); if(!f) throw std::runtime_error("Cannot write "+path);
     f<<std::setprecision(17); return f;
 }
+// Observation law: P(observed count | true count). At zero, negative counts
+// have exactly zero mass; omitted fixed-file rows repeat the preceding row.
+struct ErrorLaw {
+    double epsilon=0;
+    std::vector<int> deltas{-1,0,1};
+    std::map<int,Vec> rows;
+    explicit ErrorLaw(const std::string& path="") {
+        if(path.empty()) return;
+        std::ifstream f(path);if(!f) throw std::runtime_error("Cannot read error model");
+        std::string line; bool have_deltas=false;
+        while(std::getline(f,line)) {
+            if(line.empty()||line=="\r"||line[0]=='#') continue;
+            if(line.find("maxcnt:")==0) continue;
+            if(line.find("cntdiff:")==0) {
+                std::istringstream ss(line.substr(8));int d; deltas.clear();
+                while(ss>>d) deltas.push_back(d);
+                if(deltas.empty()||!ss.eof()||std::set<int>(deltas.begin(),deltas.end()).size()!=deltas.size())
+                    throw std::runtime_error("Invalid error deviations");
+                have_deltas=true;continue;
+            }
+            if(!have_deltas) throw std::runtime_error("Expected cntdiff before error rows");
+            std::istringstream ss(line);int count;double v;Vec row;
+            if(!(ss>>count)||count<0) throw std::runtime_error("Invalid error row count");
+            while(ss>>v) {if(!std::isfinite(v)||v<0) throw std::runtime_error("Invalid error probability");row.push_back(v);}
+            if(!ss.eof()||row.size()!=deltas.size()||std::abs(std::accumulate(row.begin(),row.end(),0.)-1)>1e-10||!rows.emplace(count,row).second)
+                throw std::runtime_error("Malformed, unnormalized or duplicate error row");
+        }
+        if(!rows.count(0)) throw std::runtime_error("Error model must explicitly define true count zero");
+        int limit=rows.rbegin()->first;
+        for(int d:deltas) limit=std::max(limit,-d);
+        for(int n=0;n<=limit;++n) {auto row=probabilities(n);for(size_t j=0;j<deltas.size();++j)
+            if(n+deltas[j]<0 && row[j]>0) throw std::runtime_error("Error model assigns mass to negative observed counts");}
+    }
+    Vec probabilities(int truth) const {
+        if(rows.empty()) return truth==0?Vec{0,1-epsilon,epsilon}:Vec{epsilon,1-2*epsilon,epsilon};
+        auto it=rows.upper_bound(truth);--it;return it->second;
+    }
+    double emission(int observed,int truth) const {
+        if(rows.empty()) {
+            if(observed==truth)return truth==0?1-epsilon:1-2*epsilon;
+            if(observed==truth+1||(truth>0&&observed==truth-1))return epsilon;
+            return 0;
+        }
+        Vec row=probabilities(truth);
+        for(size_t j=0;j<deltas.size();++j) if(observed-truth==deltas[j]) return row[j];
+        return 0;
+    }
+    int sample(int truth,std::mt19937& rng) const {
+        if(rows.empty()&&epsilon==0)return truth;
+        Vec row=probabilities(truth);int j=std::discrete_distribution<int>(row.begin(),row.end())(rng);
+        return truth+deltas[j];
+    }
+};
+static double logsum(const Vec& values) {
+    double m=*std::max_element(values.begin(),values.end());
+    if(m==-INF) return -INF;
+    double sum=0;for(double v:values) sum+=std::exp(v-m);
+    return m+std::log(sum);
+}
 struct Family {std::string id; std::vector<int> counts;};
 struct Node {std::string name; double time; int parent=-1,leaf=-1; std::vector<int> children;};
 struct Engine {
@@ -97,12 +158,13 @@ struct Engine {
     std::vector<std::pair<std::vector<int>,int>> patterns;
     std::vector<std::vector<std::vector<int>>> subtree_patterns;
     std::vector<int> root_weights;
-    Vec prior;
+    Vec prior,last_pattern_logs;
+    ErrorLaw error;
     std::map<double,Vec> matrices;
     int s;
     double lambda,nu,prior_tail=0;
     bool conditioned;
-    Engine(const Options& o):s(o.maximum+1),conditioned(!o.unconditioned) {
+    Engine(const Options& o):error(o.error_file),s(o.maximum+1),conditioned(!o.unconditioned) {
         std::ifstream f(o.tree); std::string nw; std::getline(f,nw);
         if(!f || nw.find(';')==std::string::npos) throw std::runtime_error("Cannot read Newick tree");
         std::unique_ptr<clade> tree(parse_newick(nw));
@@ -182,6 +244,13 @@ struct Engine {
             root_weights[ids[0]]+=pattern.second;
         }
     }
+    double leaf_message(const Vec& a,int y,int parent) const {
+        if(error.rows.empty()&&error.epsilon==0)return a[size_t(parent)*s+y];
+        double sum=0;
+        for(int d:error.deltas) {int truth=y-d;if(truth>=0&&truth<s)
+            sum+=a[size_t(parent)*s+truth]*error.emission(y,truth);}
+        return sum;
+    }
     void set_rates(double l,double n) {
         lambda=l; nu=n; matrices.clear();
         for(size_t i=1;i<nodes.size();++i) if(!matrices.count(nodes[i].time))
@@ -192,12 +261,12 @@ struct Engine {
         std::vector<Vec> v(nodes.size(),Vec(s,1)); double scale=0;
         for(int i=int(nodes.size())-1;i>=0;--i) {
             const auto& node=nodes[i];
-            if(node.leaf>=0) {std::fill(v[i].begin(),v[i].end(),0); v[i][y[node.leaf]]=1;}
+            if(node.leaf>=0) {std::fill(v[i].begin(),v[i].end(),0); for(int d:error.deltas) {int truth=y[node.leaf]-d;if(truth>=0&&truth<s) v[i][truth]=error.emission(y[node.leaf],truth);}}
             else for(int c:node.children) {
                 const auto& a=matrices.at(nodes[c].time);
                 for(int j=0;j<s;++j) {
                     double sum=0;
-                    if(nodes[c].leaf>=0) sum=a[size_t(j)*s+y[nodes[c].leaf]];
+                    if(nodes[c].leaf>=0) sum=leaf_message(a,y[nodes[c].leaf],j);
                     else for(int k=0;k<s;++k) sum+=a[size_t(j)*s+k]*v[c][k];
                     v[i][j]*=sum;
                 }
@@ -234,7 +303,7 @@ struct Engine {
                 const auto& key=subtree_patterns[i][p];
                 if(nodes[i].leaf>=0) {
                     const auto& a=matrices.at(nodes[i].time);
-                    for(int j=0;j<s;++j) messages[i][p][j]=a[size_t(j)*s+key[0]];
+                    for(int j=0;j<s;++j) messages[i][p][j]=leaf_message(a,key[0],j);
                 } else {
                     for(size_t c=0;c<nodes[i].children.size();++c) {
                         int child=nodes[i].children[c],id=key[c];
@@ -259,10 +328,11 @@ struct Engine {
                 scales[i][p]=logscale;
             }
         }
-        double score=0;
+        double score=0; last_pattern_logs.resize(root_weights.size());
         for(size_t p=0;p<root_weights.size();++p) {
             double z=std::inner_product(prior.begin(),prior.end(),messages[0][p].begin(),0.);
-            score-=root_weights[p]*(std::log(z)+scales[0][p]-inc);
+            last_pattern_logs[p]=std::log(z)+scales[0][p];
+            score-=root_weights[p]*(last_pattern_logs[p]-inc);
         }
         return std::isfinite(score)?score:INF;
     }
@@ -311,67 +381,137 @@ struct Engine {
                 if(value>100000000) throw std::runtime_error("Simulation count overflow");
                 values[i]=int(value);
             }
-            for(size_t i=0;i<nodes.size();++i) if(nodes[i].leaf>=0) y[nodes[i].leaf]=values[i];
+            for(size_t i=0;i<nodes.size();++i) if(nodes[i].leaf>=0) y[nodes[i].leaf]=error.sample(values[i],rng);
             if(!conditioned||std::accumulate(y.begin(),y.end(),0)>0) return y;
         }
         throw std::runtime_error("Observed-family rejection simulation exhausted attempts");
     }
 };
 
-struct Scorer:optimizer_scorer {
-    Engine& e; double fixed_l,fixed_n; Vec start; int calls=0;
-    Scorer(Engine& eng,double l,double n,Vec initial):e(eng),fixed_l(l),fixed_n(n),start(initial) {}
-    Vec initial_guesses() override {return start;}
-    double calculate_score(const double* x) override {
-        int k=0; double l=fixed_l<0?std::exp(x[k++]):fixed_l;
-        double n=fixed_n<0?std::exp(x[k++]):fixed_n;
-        ++calls;
-        if(l>1e4||n>1e4) return INF;
-        return e.nll(l,n);
+// Each category is shared across the entire family tree. Selection is applied
+// AFTER mixing categories and observation errors, not separately per category.
+static Options component_options(Options o) {o.unconditioned=true;return o;}
+struct Model:Engine {
+    Options options;
+    bool observed_condition;
+    std::vector<std::unique_ptr<Engine>> extra;
+    Vec weights,rates;
+    double shape=1,eps=0;
+    Model(const Options& o):Engine(component_options(o)),options(o),observed_condition(!o.unconditioned),weights(o.categories,1./o.categories),rates(o.categories,1) {
+        for(int k=1;k<o.categories;++k) extra.emplace_back(new Engine(component_options(o)));
+        if(observed_condition) for(const auto& f:families)
+            if(std::accumulate(f.counts.begin(),f.counts.end(),0)==0) throw std::runtime_error("All-zero observed input family");
+    }
+    Engine* component(size_t k) {return k?extra[k-1].get():static_cast<Engine*>(this);}
+    const Engine* component(size_t k) const {return k?extra[k-1].get():static_cast<const Engine*>(this);}
+    void set_rates(double l,double n,double a=1,double e=0) {
+        shape=a;eps=e;
+        if(rates.size()>1) {
+            if(a<.05||a>100) throw std::runtime_error("Gamma shape outside supported interval [0.05,100]");
+            get_gamma(weights,rates,a);
+        }
+        for(size_t k=0;k<rates.size();++k) {
+            if(!std::isfinite(rates[k])||rates[k]<=0) throw std::runtime_error("Invalid discrete gamma category");
+            component(k)->error.epsilon=e;
+            component(k)->set_rates(l*rates[k],n);
+        }
+    }
+    Vec category_logs(const std::vector<int>& y) const {
+        Vec logs(rates.size());for(size_t k=0;k<rates.size();++k) logs[k]=std::log(weights[k])+component(k)->prune(y);
+        return logs;
+    }
+    double prune(const std::vector<int>& y) const {return logsum(category_logs(y));}
+    double inclusion_log() const {
+        if(!observed_condition) return 0;
+        double z=prune(std::vector<int>(taxa.size(),0));
+        return z<0?std::log(-std::expm1(z)):-INF;
+    }
+    double nll(double l,double n,double a=1,double e=0) {
+        if(l<0||n<0||e<0||e>=.5||!std::isfinite(l)||!std::isfinite(n)||!std::isfinite(a)||!std::isfinite(e)||
+            (rates.size()>1&&(a<.05||a>100))) return INF;
+        set_rates(l,n,a,e);
+        size_t active=l==0?1:rates.size();
+        for(size_t k=0;k<active;++k) component(k)->nll(l*rates[k],n);
+        double inc;
+        if(active==1) {double z=Engine::prune(std::vector<int>(taxa.size(),0));inc=observed_condition?(z<0?std::log(-std::expm1(z)):-INF):0;}
+        else inc=inclusion_log();
+        if(!std::isfinite(inc))return INF;
+        double score=0;
+        for(size_t p=0;p<root_weights.size();++p) {
+            Vec logs(active);for(size_t k=0;k<active;++k) logs[k]=(active==1?0:std::log(weights[k]))+component(k)->last_pattern_logs[p];
+            score-=root_weights[p]*(logsum(logs)-inc);
+        }
+        return std::isfinite(score)?score:INF;
+    }
+    Vec category_posterior(const std::vector<int>& y) const {
+        Vec logs=category_logs(y);double total=logsum(logs);
+        if(!std::isfinite(total)) throw std::runtime_error("Zero mixture likelihood");
+        for(double& v:logs)v=std::exp(v-total);
+        return logs;
+    }
+    std::vector<Vec> posteriors(const std::vector<int>& y) const {
+        auto posterior=std::vector<Vec>(nodes.size(),Vec(s,0));Vec w=category_posterior(y);
+        for(size_t k=0;k<rates.size();++k) if(w[k]>0) {
+            auto post=component(k)->posteriors(y);
+            for(size_t i=0;i<nodes.size();++i)for(int j=0;j<s;++j)posterior[i][j]+=w[k]*post[i][j];
+        }
+        return posterior;
+    }
+    std::vector<int> sample(std::mt19937& rng) const {
+        for(int attempt=0;attempt<1000000;++attempt) {
+            size_t k=weights.size()==1?0:std::discrete_distribution<int>(weights.begin(),weights.end())(rng);
+            auto y=component(k)->sample(rng);
+            if(!observed_condition||std::accumulate(y.begin(),y.end(),0)>0)return y;
+        }
+        throw std::runtime_error("Observed-mixture simulation exhausted attempts");
     }
 };
-struct Fit {double l,n,score; bool converged; int iterations;};
-static Fit fit(Engine& e,const Options& o,std::ostream& trace) {
-    if(o.lambda>=0 && o.nu>=0) return {o.lambda,o.nu,e.nll(o.lambda,o.nu),true,0};
-    Fit best{0,0,INF,false,0};
-    // Include exact zero-rate faces, since log parameterization cannot attain zero.
-    std::vector<std::pair<double,double>> faces{{o.lambda,o.nu}};
-    if(o.lambda<0) faces.push_back({0,o.nu});
-    if(o.nu<0) faces.push_back({o.lambda,0});
-    if(o.lambda<0 && o.nu<0) faces.push_back({0,0});
-    double height=0; for(const auto& node:e.nodes) height=std::max(height,node.time);
-    height=std::max(height,1.);
-    trace<<"face_lambda\tface_nu\tstart\tlambda\tnu\tnll\titerations\tconverged\n";
-    for(auto face:faces) for(int attempt=0;attempt<o.starts;++attempt) {
-        Vec initial;
-        if(face.first<0) initial.push_back(std::log((.1/height)*std::pow(5.,attempt-1)));
-        if(face.second<0) initial.push_back(std::log((.1/height)*std::pow(3.,attempt-1)));
-        Fit f{face.first,face.second,INF,true,0};
-        if(initial.empty()) {if(attempt) continue; f.score=e.nll(f.l,f.n);f.converged=std::isfinite(f.score);}
-        else {
-            Scorer scorer(e,face.first,face.second,initial);
-            // A near-zero pure-immigration start can underflow for large families.
-            // Search for a finite starting likelihood before invoking Nelder-Mead.
-            for(int retry=0;retry<12 && !std::isfinite(scorer.calculate_score(initial.data()));++retry)
-                for(double& x:initial) x+=1.;
-            if(!std::isfinite(scorer.calculate_score(initial.data()))) {
-                trace<<face.first<<'\t'<<face.second<<'\t'<<attempt<<"\tNA\tNA\tinf\t0\t0"<<std::endl;
-                continue;
-            }
-            FMinSearch* search=fminsearch_new_with_eq(&scorer,initial.size());
-            search->maxiters=o.iterations; search->tolx=1e-5; search->tolf=1e-7;
-            fminsearch_min(search,initial.data());
-            candidate* c=get_best_result(search); int k=0;
-            f.l=face.first<0?std::exp(c->values[k++]):face.first;
-            f.n=face.second<0?std::exp(c->values[k++]):face.second;
-            f.score=c->score; f.iterations=search->iters; f.converged=std::isfinite(c->score) && search->iters<o.iterations;
-            fminsearch_free(search);
-        }
-        trace<<face.first<<'\t'<<face.second<<'\t'<<attempt<<'\t'<<f.l<<'\t'<<f.n<<'\t'<<f.score<<'\t'<<f.iterations<<'\t'<<f.converged<<std::endl;
-        std::cerr<<"BDI fit start: lambda="<<f.l<<" nu="<<f.n<<" nll="<<f.score<<" converged="<<f.converged<<'\n';
-        if(f.score<best.score) best=f;
+struct Fit {double l,n,a,e,score;bool converged;int iterations;};
+struct Scorer:optimizer_scorer {
+    Model& model;Options options;double fixed_l,fixed_n,fixed_e;Vec start;
+    Scorer(Model& m,const Options& o,double l,double n,double e,Vec v):model(m),options(o),fixed_l(l),fixed_n(n),fixed_e(e),start(v) {}
+    Vec initial_guesses() override {return start;}
+    Fit decode(const double* x) const {
+        int k=0;Fit f;f.l=fixed_l<0?std::exp(x[k++]):fixed_l;f.n=fixed_n<0?std::exp(x[k++]):fixed_n;
+        f.a=options.categories==1?1:(options.alpha>=0?options.alpha:(fixed_l==0?1:std::exp(x[k++])));
+        f.e=fixed_e<0?.5/(1+std::exp(-x[k++])):fixed_e;return f;
     }
-    if(!std::isfinite(best.score)) throw std::runtime_error("No finite likelihood at optimizer starts");
+    double calculate_score(const double* x) override {
+        Fit f=decode(x);if(f.l>1e4||f.n>1e4)return INF;return model.nll(f.l,f.n,f.a,f.e);
+    }
+};
+static Fit fit(Model& e,const Options& o,std::ostream& trace) {
+    Fit best{0,0,1,0,INF,false,0};
+    std::vector<std::pair<double,double>> faces{{o.lambda,o.nu}};
+    if(o.lambda<0)faces.push_back({0,o.nu});
+    if(o.nu<0)faces.push_back({o.lambda,0});
+    if(o.lambda<0&&o.nu<0)faces.push_back({0,0});
+    Vec error_faces{o.estimate_epsilon?-1:o.epsilon};if(o.estimate_epsilon)error_faces.push_back(0);
+    double height=1;for(const auto& node:e.nodes)height=std::max(height,node.time);
+    trace<<"face_lambda\tface_nu\tface_epsilon\tstart\tlambda\tnu\talpha\tepsilon\tnll\titerations\tconverged\n";
+    for(auto face:faces)for(double ef:error_faces)for(int attempt=0;attempt<o.starts;++attempt) {
+        Vec initial;
+        if(face.first<0)initial.push_back(std::log((.1/height)*std::pow(5.,attempt-1)));
+        if(face.second<0)initial.push_back(std::log((.1/height)*std::pow(3.,attempt-1)));
+        if(o.categories>1&&o.alpha<0&&face.first!=0)initial.push_back(std::log(std::pow(2.,attempt)));
+        if(ef<0){double guess=.02*std::pow(2.,attempt);guess=std::min(.2,guess);initial.push_back(std::log(guess/(.5-guess)));}
+        Scorer scorer(e,o,face.first,face.second,ef,initial);Fit f=scorer.decode(initial.data());f.iterations=0;
+        if(initial.empty()){if(attempt)continue;f.score=e.nll(f.l,f.n,f.a,f.e);f.converged=std::isfinite(f.score);}
+        else {
+            for(int retry=0;retry<12&&!std::isfinite(scorer.calculate_score(initial.data()));++retry) {
+                int k=0;if(face.first<0)initial[k++]+=1;if(face.second<0)initial[k++]+=1;
+            }
+            if(!std::isfinite(scorer.calculate_score(initial.data())))continue;
+            FMinSearch* search=fminsearch_new_with_eq(&scorer,initial.size());
+            search->maxiters=o.iterations;search->tolx=1e-5;search->tolf=1e-7;
+            fminsearch_min(search,initial.data());candidate* c=get_best_result(search);f=scorer.decode(c->values.data());
+            f.score=c->score;f.iterations=search->iters;f.converged=std::isfinite(c->score)&&search->iters<o.iterations;fminsearch_free(search);
+        }
+        trace<<face.first<<'\t'<<face.second<<'\t'<<ef<<'\t'<<attempt<<'\t'<<f.l<<'\t'<<f.n<<'\t'<<f.a<<'\t'<<f.e<<'\t'<<f.score<<'\t'<<f.iterations<<'\t'<<f.converged<<std::endl;
+        std::cerr<<"BDI fit: lambda="<<f.l<<" nu="<<f.n<<" alpha="<<f.a<<" epsilon="<<f.e<<" nll="<<f.score<<" converged="<<f.converged<<'\n';
+        if(f.score<best.score)best=f;
+    }
+    if(!std::isfinite(best.score))throw std::runtime_error("No finite likelihood at optimizer starts");
     return best;
 }
 static void usage() {
@@ -386,7 +526,9 @@ static void usage() {
       "--unconditioned: disable ascertainment correction AND simulation rejection\n"
       "--no-truncation-check: skip final doubled-state-space likelihood check\n"
       "--matrix-time T --matrix-output FILE --lambda L --nu N: export transition matrix\n"
-      "Gamma mixtures, annotation error, branch-specific rates and legacy p-values are unsupported.\n";
+      "--gamma-cats K (1); --alpha A (otherwise estimated when K>1)\n"
+      "--epsilon E (fixed) OR --estimate-epsilon OR --error-model FILE\n"
+      "Gamma scales duplication/loss only; branch-specific rates and legacy p-values are unsupported.\n";
 }
 int run(int argc,char *const argv[]) {
     try {
@@ -396,6 +538,7 @@ int run(int argc,char *const argv[]) {
             if(a=="--help"||a=="-h") {usage();return 0;}
             if(a=="--unconditioned") {o.unconditioned=true;continue;}
             if(a=="--no-truncation-check") {o.check=false;continue;}
+            if(a=="--estimate-epsilon") {o.estimate_epsilon=true;continue;}
             if(a=="--likelihood-only") {o.likelihood_only=true;continue;}
             if(i+1>=argc) throw std::runtime_error("Missing value for "+a);
             std::string v=argv[++i];
@@ -406,6 +549,10 @@ int run(int argc,char *const argv[]) {
             else if(a=="--root-mean") {o.root_mean=number(v);if(o.root_mean<0) throw std::runtime_error("Negative root mean");}
             else if(a=="--lambda") {o.lambda=number(v);if(o.lambda<0) throw std::runtime_error("Negative lambda");}
             else if(a=="--nu") {o.nu=number(v);if(o.nu<0) throw std::runtime_error("Negative nu");}
+            else if(a=="--gamma-cats") o.categories=integer(v);
+            else if(a=="--alpha") o.alpha=number(v);
+            else if(a=="--epsilon") {o.epsilon=number(v);o.epsilon_set=true;}
+            else if(a=="--error-model") o.error_file=v;
             else if(a=="--max-count") o.maximum=integer(v);
             else if(a=="--iterations") o.iterations=integer(v);
             else if(a=="--starts") o.starts=integer(v);
@@ -427,10 +574,16 @@ int run(int argc,char *const argv[]) {
             auto a=transition(o.maximum,o.lambda,o.nu,o.matrix_time);auto f=output(o.matrix_file);
             for(int i=0;i<=o.maximum;++i) {for(int j=0;j<=o.maximum;++j) f<<(j?"\t":"")<<a[size_t(i)*(o.maximum+1)+j];f<<'\n';} return 0;
         }
-        Engine e(o); std::mt19937 rng(o.seed);
+        if(o.categories<1||o.categories>32||o.epsilon<0||o.epsilon>=.5||
+            (o.alpha!=-1&&(o.alpha<.05||o.alpha>100))||(o.categories==1&&o.alpha!=-1))
+            throw std::runtime_error("Invalid gamma/error settings");
+        if(int(o.epsilon_set)+int(o.estimate_epsilon)+int(!o.error_file.empty())>1)
+            throw std::runtime_error("Choose fixed epsilon, estimated epsilon OR an error-model file");
+        Model e(o); std::mt19937 rng(o.seed);
         if(o.simulate) {
             if(o.lambda<0||o.nu<0) throw std::runtime_error("Simulation requires --lambda and --nu");
-            e.set_rates(o.lambda,o.nu); if(!std::isfinite(e.inclusion_log())) throw std::runtime_error("Zero inclusion probability");
+            if(o.estimate_epsilon||(o.categories>1&&o.alpha<0))throw std::runtime_error("Simulation requires fixed alpha and epsilon");
+            e.set_rates(o.lambda,o.nu,o.categories>1?o.alpha:1,o.epsilon); if(!std::isfinite(e.inclusion_log())) throw std::runtime_error("Zero inclusion probability");
             auto f=output(o.prefix+"_simulated.tsv");f<<"Desc\tFamily ID";for(auto& t:e.taxa) f<<'\t'<<t;f<<'\n';
             for(int i=0;i<o.simulate;++i) {auto y=e.sample(rng);f<<"BDI\tsim"<<i;for(int n:y) f<<'\t'<<n;f<<'\n';}return 0;
         }
@@ -439,30 +592,37 @@ int run(int argc,char *const argv[]) {
         double delta=std::numeric_limits<double>::quiet_NaN();
         if(o.check) {
             Options larger=o; larger.maximum=2*o.maximum;
-            Engine check(larger); double large_score=check.nll(f.l,f.n);delta=f.score-large_score;
+            Model check(larger); double large_score=check.nll(f.l,f.n,f.a,f.e);delta=f.score-large_score;
         }
-        e.set_rates(f.l,f.n); double inc=e.inclusion_log();
+        e.set_rates(f.l,f.n,f.a,f.e); double inc=e.inclusion_log();
         auto report=output(o.prefix+"_results.tsv");
         report<<"parameter\tvalue\nmodel\tBDI_equal_birth_death\nlambda\t"<<f.l<<"\nnu\t"<<f.n<<"\nnegative_log_likelihood\t"<<f.score
           <<"\nfamilies\t"<<e.families.size()<<"\nunique_patterns\t"<<e.patterns.size()<<"\nmax_count\t"<<o.maximum
+          <<"\ngamma_categories\t"<<o.categories<<"\nalpha\t"<<f.a<<"\nepsilon\t"<<f.e<<"\nerror_model_file\t"<<o.error_file<<"\nalpha_at_bound\t"<<(o.categories>1&&(f.a<.0501||f.a>99.99))
+          <<"\nalpha_identifiable\t"<<(o.categories>1&&f.l>0)
           <<"\nroot_mean\t"<<o.root_mean<<"\nroot_prior_file\t"<<o.root_file<<"\nroot_prior_omitted_mass\t"<<e.prior_tail
-          <<"\nconditioned_on_observed\t"<<e.conditioned<<"\nlog_inclusion_probability\t"<<inc
+          <<"\nconditioned_on_observed\t"<<e.observed_condition<<"\nlog_inclusion_probability\t"<<inc
           <<"\noptimizer_converged\t"<<f.converged<<"\ntruncation_nll_difference\t"<<delta
           <<"\ntruncation_pass\t"<<(o.check&&std::isfinite(delta)&&std::abs(delta)<.01)
-          <<"\nseed\t"<<o.seed<<"\nsignificance_status\texperimental_only_no_branch_pvalues\n";
+          <<"\nseed\t"<<o.seed<<"\nsignificance_status\tuse_branch_bootstrap_driver_for_calibrated_tail_tests\n";
         if(o.likelihood_only) {
             if(o.bootstrap) throw std::runtime_error("--likelihood-only cannot be combined with --bootstrap");
             std::cout<<"BDI lambda="<<f.l<<" nu="<<f.n<<" nll="<<f.score<<" truncation_delta="<<delta<<'\n';
             return (f.converged&&(!o.check||(std::isfinite(delta)&&std::abs(delta)<.01)))?0:2;
         }
+        auto categories=output(o.prefix+"_categories.tsv");categories<<"category\tweight\tlambda_multiplier\n";
+        for(size_t k=0;k<e.rates.size();++k)categories<<k<<'\t'<<e.weights[k]<<'\t'<<e.rates[k]<<'\n';
+        auto branch=output(o.prefix+"_branch_statistics.tsv");branch<<"Family ID\tNode\tparent\tposterior_mean_change\n";
         auto ancestral=output(o.prefix+"_ancestral.tsv");ancestral<<"Family ID\tNode\tparent\tMAP_count\tposterior_mean\tP_zero\tP_at_cap\n";
-        auto likelihood=output(o.prefix+"_families.tsv");likelihood<<"Family ID\tconditional_log_likelihood\n";
+        auto likelihood=output(o.prefix+"_families.tsv");likelihood<<"Family ID\tconditional_log_likelihood";for(size_t k=0;k<e.rates.size();++k)likelihood<<"\tP_category_"<<k;likelihood<<'\n';
         std::map<std::vector<int>,std::vector<Vec>> reconstructed;
         std::vector<double> scores;
         for(auto& family:e.families) {
-            double score=e.prune(family.counts)-inc;scores.push_back(score);likelihood<<family.id<<'\t'<<score<<'\n';
+            double score=e.prune(family.counts)-inc;scores.push_back(score);likelihood<<family.id<<'\t'<<score;for(double w:e.category_posterior(family.counts))likelihood<<'\t'<<w;likelihood<<'\n';
             auto it=reconstructed.find(family.counts);
             if(it==reconstructed.end()) it=reconstructed.emplace(family.counts,e.posteriors(family.counts)).first;
+            Vec means(e.nodes.size());for(size_t i=0;i<e.nodes.size();++i)for(int j=0;j<e.s;++j)means[i]+=j*it->second[i][j];
+            for(size_t i=1;i<e.nodes.size();++i)branch<<family.id<<'\t'<<e.nodes[i].name<<'\t'<<e.nodes[e.nodes[i].parent].name<<'\t'<<means[i]-means[e.nodes[i].parent]<<'\n';
             for(size_t i=0;i<e.nodes.size();++i) {
                 const auto& p=it->second[i];double mean=0;for(int j=0;j<e.s;++j) mean+=j*p[j];
                 ancestral<<family.id<<'\t'<<e.nodes[i].name<<'\t'<<(e.nodes[i].parent<0?"NA":e.nodes[e.nodes[i].parent].name)<<'\t'

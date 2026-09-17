@@ -3,9 +3,10 @@
 `cafe5 --innovation` selects a separate likelihood engine for a global
 copy-independent innovation rate. The default CAFE5 model is unchanged.
 This is a research extension, not a validated replacement for every CAFE5
-analysis. Gamma mixtures, annotation-error estimation, branch-specific rates,
-and the legacy family/branch significance calculations are deliberately rejected
-in this mode.
+analysis. Gamma variation, fixed/estimated annotation error and model-based
+branch bootstrap tests are now described in
+[the extension guide](innovation_mixtures_and_branches.md). Branch-specific
+rates and the legacy family/branch significance calculations remain unsupported.
 
 ## Model and interpretation
 
@@ -122,9 +123,9 @@ global optimum, and no asymptotic confidence interval is implied.
 
 `--likelihood-only` skips family and ancestral output for rate profiling or
 sensitivity fits; it retains the results and optimization tables.
-Output prefix parent directories must exist. Options such as `-k`, `-e`, and
-legacy `--zero_root` are not accepted with `--innovation`: their old semantics
-would not implement this model.
+Output prefix parent directories must exist. Use the explicit `--gamma-cats`, `--alpha`, `--epsilon`, `--estimate-epsilon`
+and `--error-model` options documented in the extension guide. Legacy aliases
+`-k`, `-e` and `--zero_root` are not accepted in this mode.
 
 Outputs:
 
@@ -170,8 +171,8 @@ These probabilities are **experimental fixed-parameter model checks**, not
 validated CAFE branch p-values. Fitting parameters to the same families can alter
 calibration; this option does not refit parameters in each replicate. Multiple
 testing correction and a broader assessment of composite-null calibration remain
-necessary for inferential use. No branch expansion/contraction p-values are
-emitted.
+necessary for inferential use. This legacy family-level option emits no branch p-values; use the separate
+`branch_bootstrap.py` driver for branch tests and their calibration workflow.
 
 ## Independent validation
 

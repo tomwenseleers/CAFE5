@@ -1,0 +1,78 @@
+{
+  "known_parameters": {
+    "fraction_p_le_005_by_branch": {
+      "Node1": 0.048,
+      "A": 0.046,
+      "B": 0.048,
+      "Node4": 0.052,
+      "C": 0.0435,
+      "D": 0.044
+    },
+    "mean_fraction": 0.04691666666666666,
+    "family_branch_tests": 12000
+  },
+  "refitted_outer_replicates": [
+    {
+      "fraction_p_le_005_by_branch": {
+        "Node1": 0.04666666666666667,
+        "A": 0.06333333333333334,
+        "B": 0.06333333333333334,
+        "Node4": 0.056666666666666664,
+        "C": 0.03666666666666667,
+        "D": 0.03
+      },
+      "mean_fraction": 0.04944444444444444,
+      "family_branch_tests": 1800,
+      "outer_replicate": 0
+    },
+    {
+      "fraction_p_le_005_by_branch": {
+        "Node1": 0.03,
+        "A": 0.03666666666666667,
+        "B": 0.03666666666666667,
+        "Node4": 0.03333333333333333,
+        "C": 0.06333333333333334,
+        "D": 0.05
+      },
+      "mean_fraction": 0.041666666666666664,
+      "family_branch_tests": 1800,
+      "outer_replicate": 1
+    },
+    {
+      "fraction_p_le_005_by_branch": {
+        "Node1": 0.06666666666666667,
+        "A": 0.03,
+        "B": 0.04,
+        "Node4": 0.05,
+        "C": 0.05333333333333334,
+        "D": 0.06666666666666667
+      },
+      "mean_fraction": 0.05111111111111111,
+      "family_branch_tests": 1800,
+      "outer_replicate": 2
+    },
+    {
+      "fraction_p_le_005_by_branch": {
+        "Node1": 0.06666666666666667,
+        "A": 0.06333333333333334,
+        "B": 0.05333333333333334,
+        "Node4": 0.04666666666666667,
+        "C": 0.05333333333333334,
+        "D": 0.05333333333333334
+      },
+      "mean_fraction": 0.05611111111111111,
+      "family_branch_tests": 1800,
+      "outer_replicate": 3
+    }
+  ],
+  "refitted_mean_fraction_p_le_005": 0.049583333333333326,
+  "bootstrap_datasets_per_outer_replicate": 39,
+  "families_per_outer_dataset": 300,
+  "estimated_parameters": [
+    "lambda",
+    "nu",
+    "alpha",
+    "epsilon"
+  ],
+  "limitation": "Limited calibration at one generating regime. Only four independent outer datasets by default; cannot certify type-I error across all parameters or the empirical wasp analysis. Coarse Monte Carlo resolution 2/(39+1)=0.05."
+}
