@@ -1,0 +1,19 @@
+name: Innovation model validation
+on: [push, pull_request]
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ zlib1g-dev python3-numpy python3-scipy
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations -Wno-error=stringop-overflow"
+          cmake --build build --target cafe5 tests -j 2
+      - name: Legacy tests
+        run: ./build/tests
+      - name: Independent innovation checks
+        run: python3 scripts/innovation/validate.py build/cafe5 validation/numerical
+      - name: Simulation recovery and fixed-parameter calibration
+        run: python3 scripts/innovation/recovery.py build/cafe5 validation/recovery --replicates 12

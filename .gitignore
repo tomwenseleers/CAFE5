@@ -17,3 +17,9 @@ src_docs/latex/
 .gdb_history
 .vs/
 CPPProperties.json
+
+# Innovation model local builds and generated empirical/simulation outputs
+build/
+/validation/
+__pycache__/
+.wsl-tools/

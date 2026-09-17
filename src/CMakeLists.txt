@@ -9,3 +9,6 @@ target_sources(tests PRIVATE easylogging++.cpp execute.cpp gamma.cpp gene_family
 target_sources(tests PRIVATE base_model.cpp error_model.cpp gene_family.cpp matrix_cache.cpp poisson.cpp)
 target_sources(tests PRIVATE report.cpp root_equilibrium_distribution.cpp probability.cpp)
 target_sources(tests PRIVATE clade.cpp io.cpp optimizer.cpp simulator.cpp newick_ape_loader.cpp)
+
+target_sources(cafe5 PRIVATE innovation.cpp)
+target_sources(tests PRIVATE innovation.cpp)
