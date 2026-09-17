@@ -21,3 +21,7 @@ jobs:
         run: python3 scripts/innovation/validate_mixtures.py build/cafe5 validation/mixtures
       - name: Branch test calibration smoke check
         run: python3 scripts/innovation/validate_branches.py build/cafe5 validation/branches --outer-replicates 1
+      - name: Estimated Poisson root-law validation
+        run: python3 scripts/innovation/validate_root_fit.py build/cafe5 validation/root_fit
+      - name: Transition-score and one-percent null check
+        run: python3 scripts/innovation/validate_transition_bootstrap.py build/cafe5 validation/transition_bootstrap

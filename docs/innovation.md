@@ -8,6 +8,12 @@ branch bootstrap tests are now described in
 [the extension guide](innovation_mixtures_and_branches.md). Branch-specific
 rates and the legacy family/branch significance calculations remain unsupported.
 
+The [full-data focal bootstrap protocol](focal_bootstrap_methods.md) adds optional
+joint estimation of the Poisson root mean, pooled refitted bootstrap tails with
+dataset-level Monte Carlo uncertainty, and manuscript comparison tools. It also
+explains the differences between posterior-mean and transition-surprise branch
+tests and why model adequacy must be checked separately from numerical accuracy.
+
 ## Model and interpretation
 
 For each family independently, on every branch,

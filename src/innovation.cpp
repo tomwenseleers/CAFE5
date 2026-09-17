@@ -65,10 +65,11 @@ std::vector<double> transition(int maximum, double lambda, double nu, double tim
 struct Options {
     std::string tree,input,prefix="innovation",root_file,matrix_file,error_file;
     double lambda=-1,nu=-1,root_mean=-1,matrix_time=-1,alpha=-1,epsilon=0;
+    double initial_lambda=-1,initial_nu=-1,initial_alpha=-1,initial_epsilon=-1;
     int categories=1; bool estimate_epsilon=false,epsilon_set=false;
     int maximum=80,iterations=400,starts=3,simulate=0,bootstrap=0,threads=1;
     unsigned seed=20260917;
-    bool unconditioned=false,check=true,likelihood_only=false;
+    bool unconditioned=false,check=true,likelihood_only=false,estimate_root_mean=false,boundary_fits=true;
 };
 static double number(const std::string& x) {
     size_t p=0; double v=std::stod(x,&p);
@@ -267,7 +268,10 @@ struct Engine {
                 for(int j=0;j<s;++j) {
                     double sum=0;
                     if(nodes[c].leaf>=0) sum=leaf_message(a,y[nodes[c].leaf],j);
-                    else for(int k=0;k<s;++k) sum+=a[size_t(j)*s+k]*v[c][k];
+                    else {
+                        #pragma omp simd reduction(+:sum)
+                        for(int k=0;k<s;++k) sum+=a[size_t(j)*s+k]*v[c][k];
+                    }
                     v[i][j]*=sum;
                 }
                 double m=*std::max_element(v[i].begin(),v[i].end());
@@ -317,7 +321,9 @@ struct Engine {
                     else {
                         const auto& a=matrices.at(nodes[i].time);
                         for(int j=0;j<s;++j) {
-                            double sum=0;for(int k=0;k<s;++k) sum+=a[size_t(j)*s+k]*v[k];
+                            double sum=0;
+                            #pragma omp simd reduction(+:sum)
+                            for(int k=0;k<s;++k) sum+=a[size_t(j)*s+k]*v[k];
                             messages[i][p][j]=sum;
                         }
                     }
@@ -350,14 +356,21 @@ struct Engine {
                 for(int sibling:nodes[i].children) if(sibling!=c) {
                     const auto& b=matrices.at(nodes[sibling].time);
                     for(int j=0;j<s;++j) {
-                        double sum=0; for(int k=0;k<s;++k) sum+=b[size_t(j)*s+k]*inside[sibling][k];
+                        double sum=0;
+                        #pragma omp simd reduction(+:sum)
+                        for(int k=0;k<s;++k) sum+=b[size_t(j)*s+k]*inside[sibling][k];
                         context[j]*=sum;
                     }
                     double m=*std::max_element(context.begin(),context.end());
                     if(m>0) for(double& x:context) x/=m;
                 }
                 const auto& a=matrices.at(nodes[c].time);
-                for(int k=0;k<s;++k) for(int j=0;j<s;++j) outside[c][k]+=context[j]*a[size_t(j)*s+k];
+                for(int j=0;j<s;++j) {
+                    const double weight=context[j];
+                    const double* row=&a[size_t(j)*s];
+                    #pragma omp simd
+                    for(int k=0;k<s;++k) outside[c][k]+=weight*row[k];
+                }
                 double m=*std::max_element(outside[c].begin(),outside[c].end());
                 if(m>0) for(double& x:outside[c]) x/=m;
             }
@@ -404,6 +417,16 @@ struct Model:Engine {
     }
     Engine* component(size_t k) {return k?extra[k-1].get():static_cast<Engine*>(this);}
     const Engine* component(size_t k) const {return k?extra[k-1].get():static_cast<const Engine*>(this);}
+    bool set_root_mean(double mean) {
+        if(mean<0||!std::isfinite(mean)) return false;
+        Vec probabilities(s);
+        for(int k=0;k<s;++k) probabilities[k]=mean==0?(k==0):std::exp(-mean+k*std::log(mean)-std::lgamma(k+1.));
+        double mass=std::accumulate(probabilities.begin(),probabilities.end(),0.);
+        if(mass<=0||1-mass>1e-8) return false;
+        for(double& p:probabilities) p/=mass;
+        for(size_t k=0;k<rates.size();++k) {component(k)->prior=probabilities;component(k)->prior_tail=std::max(0.,1-mass);}
+        return true;
+    }
     void set_rates(double l,double n,double a=1,double e=0) {
         shape=a;eps=e;
         if(rates.size()>1) {
@@ -466,7 +489,7 @@ struct Model:Engine {
         throw std::runtime_error("Observed-mixture simulation exhausted attempts");
     }
 };
-struct Fit {double l,n,a,e,score;bool converged;int iterations;};
+struct Fit {double l,n,a,e,score;bool converged;int iterations;double root_mean;};
 struct Scorer:optimizer_scorer {
     Model& model;Options options;double fixed_l,fixed_n,fixed_e;Vec start;
     Scorer(Model& m,const Options& o,double l,double n,double e,Vec v):model(m),options(o),fixed_l(l),fixed_n(n),fixed_e(e),start(v) {}
@@ -474,27 +497,31 @@ struct Scorer:optimizer_scorer {
     Fit decode(const double* x) const {
         int k=0;Fit f;f.l=fixed_l<0?std::exp(x[k++]):fixed_l;f.n=fixed_n<0?std::exp(x[k++]):fixed_n;
         f.a=options.categories==1?1:(options.alpha>=0?options.alpha:(fixed_l==0?1:std::exp(x[k++])));
-        f.e=fixed_e<0?.5/(1+std::exp(-x[k++])):fixed_e;return f;
+        f.e=fixed_e<0?.5/(1+std::exp(-x[k++])):fixed_e;
+        f.root_mean=options.estimate_root_mean?std::exp(x[k++]):options.root_mean;return f;
     }
     double calculate_score(const double* x) override {
-        Fit f=decode(x);if(f.l>1e4||f.n>1e4)return INF;return model.nll(f.l,f.n,f.a,f.e);
+        Fit f=decode(x);if(f.l>1e4||f.n>1e4)return INF;
+        if(options.estimate_root_mean&&!model.set_root_mean(f.root_mean))return INF;
+        return model.nll(f.l,f.n,f.a,f.e);
     }
 };
 static Fit fit(Model& e,const Options& o,std::ostream& trace) {
-    Fit best{0,0,1,0,INF,false,0};
+    Fit best{0,0,1,0,INF,false,0,o.root_mean};
     std::vector<std::pair<double,double>> faces{{o.lambda,o.nu}};
-    if(o.lambda<0)faces.push_back({0,o.nu});
-    if(o.nu<0)faces.push_back({o.lambda,0});
-    if(o.lambda<0&&o.nu<0)faces.push_back({0,0});
-    Vec error_faces{o.estimate_epsilon?-1:o.epsilon};if(o.estimate_epsilon)error_faces.push_back(0);
+    if(o.boundary_fits&&o.lambda<0)faces.push_back({0,o.nu});
+    if(o.boundary_fits&&o.nu<0)faces.push_back({o.lambda,0});
+    if(o.boundary_fits&&o.lambda<0&&o.nu<0)faces.push_back({0,0});
+    Vec error_faces{o.estimate_epsilon?-1:o.epsilon};if(o.boundary_fits&&o.estimate_epsilon)error_faces.push_back(0);
     double height=1;for(const auto& node:e.nodes)height=std::max(height,node.time);
-    trace<<"face_lambda\tface_nu\tface_epsilon\tstart\tlambda\tnu\talpha\tepsilon\tnll\titerations\tconverged\n";
+    trace<<"face_lambda\tface_nu\tface_epsilon\tstart\tlambda\tnu\talpha\tepsilon\tnll\titerations\tconverged\troot_mean\n";
     for(auto face:faces)for(double ef:error_faces)for(int attempt=0;attempt<o.starts;++attempt) {
         Vec initial;
-        if(face.first<0)initial.push_back(std::log((.1/height)*std::pow(5.,attempt-1)));
-        if(face.second<0)initial.push_back(std::log((.1/height)*std::pow(3.,attempt-1)));
-        if(o.categories>1&&o.alpha<0&&face.first!=0)initial.push_back(std::log(std::pow(2.,attempt)));
-        if(ef<0){double guess=.02*std::pow(2.,attempt);guess=std::min(.2,guess);initial.push_back(std::log(guess/(.5-guess)));}
+        if(face.first<0)initial.push_back(std::log(attempt==0&&o.initial_lambda>0?o.initial_lambda:(.1/height)*std::pow(5.,attempt-1)));
+        if(face.second<0)initial.push_back(std::log(attempt==0&&o.initial_nu>0?o.initial_nu:(.1/height)*std::pow(3.,attempt-1)));
+        if(o.categories>1&&o.alpha<0&&face.first!=0)initial.push_back(std::log(attempt==0&&o.initial_alpha>0?o.initial_alpha:std::pow(2.,attempt)));
+        if(ef<0){double guess=attempt==0&&o.initial_epsilon>0?o.initial_epsilon:.02*std::pow(2.,attempt);guess=std::min(.2,guess);initial.push_back(std::log(guess/(.5-guess)));}
+        if(o.estimate_root_mean)initial.push_back(std::log(std::max(.01,o.root_mean)*std::pow(2.,attempt)));
         Scorer scorer(e,o,face.first,face.second,ef,initial);Fit f=scorer.decode(initial.data());f.iterations=0;
         if(initial.empty()){if(attempt)continue;f.score=e.nll(f.l,f.n,f.a,f.e);f.converged=std::isfinite(f.score);}
         else {
@@ -507,7 +534,7 @@ static Fit fit(Model& e,const Options& o,std::ostream& trace) {
             fminsearch_min(search,initial.data());candidate* c=get_best_result(search);f=scorer.decode(c->values.data());
             f.score=c->score;f.iterations=search->iters;f.converged=std::isfinite(c->score)&&search->iters<o.iterations;fminsearch_free(search);
         }
-        trace<<face.first<<'\t'<<face.second<<'\t'<<ef<<'\t'<<attempt<<'\t'<<f.l<<'\t'<<f.n<<'\t'<<f.a<<'\t'<<f.e<<'\t'<<f.score<<'\t'<<f.iterations<<'\t'<<f.converged<<std::endl;
+        trace<<face.first<<'\t'<<face.second<<'\t'<<ef<<'\t'<<attempt<<'\t'<<f.l<<'\t'<<f.n<<'\t'<<f.a<<'\t'<<f.e<<'\t'<<f.score<<'\t'<<f.iterations<<'\t'<<f.converged<<'\t'<<f.root_mean<<std::endl;
         std::cerr<<"BDI fit: lambda="<<f.l<<" nu="<<f.n<<" alpha="<<f.a<<" epsilon="<<f.e<<" nll="<<f.score<<" converged="<<f.converged<<'\n';
         if(f.score<best.score)best=f;
     }
@@ -522,6 +549,9 @@ static void usage() {
       "--max-count K (80), --iterations N (400), --starts N (3), --threads N (1)\n"
       "--simulate N --lambda L --nu N: generate observed-family table\n"
       "--likelihood-only: skip family and ancestral output (e.g. likelihood profiles)\n"
+      "--skip-boundary-fits: positive-parameter refit only; default also searches exact zero faces\n"
+      "--estimate-root-mean: jointly fit Poisson root mean; --root-mean supplies its start\n"
+      "--initial-lambda L --initial-nu N --initial-alpha A --initial-epsilon E: first optimizer start only\n"
       "--seed N; --bootstrap N: experimental fixed-parameter family tail probabilities\n"
       "--unconditioned: disable ascertainment correction AND simulation rejection\n"
       "--no-truncation-check: skip final doubled-state-space likelihood check\n"
@@ -540,6 +570,8 @@ int run(int argc,char *const argv[]) {
             if(a=="--no-truncation-check") {o.check=false;continue;}
             if(a=="--estimate-epsilon") {o.estimate_epsilon=true;continue;}
             if(a=="--likelihood-only") {o.likelihood_only=true;continue;}
+            if(a=="--skip-boundary-fits") {o.boundary_fits=false;continue;}
+            if(a=="--estimate-root-mean") {o.estimate_root_mean=true;continue;}
             if(i+1>=argc) throw std::runtime_error("Missing value for "+a);
             std::string v=argv[++i];
             if(a=="-t"||a=="--tree") o.tree=v;
@@ -549,6 +581,10 @@ int run(int argc,char *const argv[]) {
             else if(a=="--root-mean") {o.root_mean=number(v);if(o.root_mean<0) throw std::runtime_error("Negative root mean");}
             else if(a=="--lambda") {o.lambda=number(v);if(o.lambda<0) throw std::runtime_error("Negative lambda");}
             else if(a=="--nu") {o.nu=number(v);if(o.nu<0) throw std::runtime_error("Negative nu");}
+            else if(a=="--initial-lambda") o.initial_lambda=number(v);
+            else if(a=="--initial-nu") o.initial_nu=number(v);
+            else if(a=="--initial-alpha") o.initial_alpha=number(v);
+            else if(a=="--initial-epsilon") o.initial_epsilon=number(v);
             else if(a=="--gamma-cats") o.categories=integer(v);
             else if(a=="--alpha") o.alpha=number(v);
             else if(a=="--epsilon") {o.epsilon=number(v);o.epsilon_set=true;}
@@ -566,6 +602,7 @@ int run(int argc,char *const argv[]) {
         }
         if(o.maximum<1||o.maximum>5000||o.starts<1||o.iterations<1||o.threads<1)
             throw std::runtime_error("Invalid computational limit (max-count 1..5000)");
+        if(o.estimate_root_mean&&(o.root_mean<=0||!o.root_file.empty()||o.simulate)) throw std::runtime_error("Estimating root mean requires positive --root-mean initial value, no root file, and observed data");
         if(o.root_mean>=0&&!o.root_file.empty()) throw std::runtime_error("Choose one root distribution");
         #ifdef _OPENMP
         omp_set_num_threads(o.threads);
@@ -592,17 +629,18 @@ int run(int argc,char *const argv[]) {
         double delta=std::numeric_limits<double>::quiet_NaN();
         if(o.check) {
             Options larger=o; larger.maximum=2*o.maximum;
-            Model check(larger); double large_score=check.nll(f.l,f.n,f.a,f.e);delta=f.score-large_score;
+            Model check(larger); if(o.estimate_root_mean&&!check.set_root_mean(f.root_mean))throw std::runtime_error("Root prior truncation failed"); double large_score=check.nll(f.l,f.n,f.a,f.e);delta=f.score-large_score;
         }
+        if(o.estimate_root_mean&&!e.set_root_mean(f.root_mean))throw std::runtime_error("Root prior truncation failed");
         e.set_rates(f.l,f.n,f.a,f.e); double inc=e.inclusion_log();
         auto report=output(o.prefix+"_results.tsv");
         report<<"parameter\tvalue\nmodel\tBDI_equal_birth_death\nlambda\t"<<f.l<<"\nnu\t"<<f.n<<"\nnegative_log_likelihood\t"<<f.score
           <<"\nfamilies\t"<<e.families.size()<<"\nunique_patterns\t"<<e.patterns.size()<<"\nmax_count\t"<<o.maximum
           <<"\ngamma_categories\t"<<o.categories<<"\nalpha\t"<<f.a<<"\nepsilon\t"<<f.e<<"\nerror_model_file\t"<<o.error_file<<"\nalpha_at_bound\t"<<(o.categories>1&&(f.a<.0501||f.a>99.99))
           <<"\nalpha_identifiable\t"<<(o.categories>1&&f.l>0)
-          <<"\nroot_mean\t"<<o.root_mean<<"\nroot_prior_file\t"<<o.root_file<<"\nroot_prior_omitted_mass\t"<<e.prior_tail
+          <<"\nroot_mean\t"<<f.root_mean<<"\nroot_mean_estimated\t"<<o.estimate_root_mean<<"\nroot_prior_file\t"<<o.root_file<<"\nroot_prior_omitted_mass\t"<<e.prior_tail
           <<"\nconditioned_on_observed\t"<<e.observed_condition<<"\nlog_inclusion_probability\t"<<inc
-          <<"\noptimizer_converged\t"<<f.converged<<"\ntruncation_nll_difference\t"<<delta
+          <<"\nboundary_fits\t"<<o.boundary_fits<<"\noptimizer_converged\t"<<f.converged<<"\ntruncation_nll_difference\t"<<delta
           <<"\ntruncation_pass\t"<<(o.check&&std::isfinite(delta)&&std::abs(delta)<.01)
           <<"\nseed\t"<<o.seed<<"\nsignificance_status\tuse_branch_bootstrap_driver_for_calibrated_tail_tests\n";
         if(o.likelihood_only) {
@@ -612,17 +650,55 @@ int run(int argc,char *const argv[]) {
         }
         auto categories=output(o.prefix+"_categories.tsv");categories<<"category\tweight\tlambda_multiplier\n";
         for(size_t k=0;k<e.rates.size();++k)categories<<k<<'\t'<<e.weights[k]<<'\t'<<e.rates[k]<<'\n';
-        auto branch=output(o.prefix+"_branch_statistics.tsv");branch<<"Family ID\tNode\tparent\tposterior_mean_change\n";
+        auto branch=output(o.prefix+"_branch_statistics.tsv");branch<<"Family ID\tNode\tparent\tposterior_mean_change\tparent_MAP_count\tchild_MAP_count\tMAP_change\ttransition_tail_score\n";
         auto ancestral=output(o.prefix+"_ancestral.tsv");ancestral<<"Family ID\tNode\tparent\tMAP_count\tposterior_mean\tP_zero\tP_at_cap\n";
         auto likelihood=output(o.prefix+"_families.tsv");likelihood<<"Family ID\tconditional_log_likelihood";for(size_t k=0;k<e.rates.size();++k)likelihood<<"\tP_category_"<<k;likelihood<<'\n';
         std::map<std::vector<int>,std::vector<Vec>> reconstructed;
+        // Compute each distinct posterior once in parallel; output stays deterministic.
+        std::vector<std::vector<Vec>> pattern_posteriors(e.patterns.size());
+        std::vector<std::string> reconstruction_errors(e.patterns.size());
+        std::vector<Vec> pattern_categories(e.patterns.size());
+        Vec pattern_scores(e.patterns.size());
+        #pragma omp parallel for schedule(dynamic)
+        for(size_t k=0;k<e.patterns.size();++k) {
+            try {
+                pattern_posteriors[k]=e.posteriors(e.patterns[k].first);
+                pattern_scores[k]=e.prune(e.patterns[k].first)-inc;
+                pattern_categories[k]=e.category_posterior(e.patterns[k].first);
+            }
+            catch(const std::exception& ex) {reconstruction_errors[k]=ex.what();}
+        }
+        std::map<std::vector<int>,size_t> pattern_index;
+        for(size_t k=0;k<e.patterns.size();++k) {
+            pattern_index.emplace(e.patterns[k].first,k);
+            if(!reconstruction_errors[k].empty()) throw std::runtime_error(reconstruction_errors[k]);
+            reconstructed.emplace(e.patterns[k].first,std::move(pattern_posteriors[k]));
+        }
         std::vector<double> scores;
         for(auto& family:e.families) {
-            double score=e.prune(family.counts)-inc;scores.push_back(score);likelihood<<family.id<<'\t'<<score;for(double w:e.category_posterior(family.counts))likelihood<<'\t'<<w;likelihood<<'\n';
+            size_t pattern_id=pattern_index.at(family.counts);
+            double score=pattern_scores[pattern_id];scores.push_back(score);likelihood<<family.id<<'\t'<<score;for(double w:pattern_categories[pattern_id])likelihood<<'\t'<<w;likelihood<<'\n';
             auto it=reconstructed.find(family.counts);
             if(it==reconstructed.end()) it=reconstructed.emplace(family.counts,e.posteriors(family.counts)).first;
             Vec means(e.nodes.size());for(size_t i=0;i<e.nodes.size();++i)for(int j=0;j<e.s;++j)means[i]+=j*it->second[i][j];
-            for(size_t i=1;i<e.nodes.size();++i)branch<<family.id<<'\t'<<e.nodes[i].name<<'\t'<<e.nodes[e.nodes[i].parent].name<<'\t'<<means[i]-means[e.nodes[i].parent]<<'\n';
+            std::vector<int> modes(e.nodes.size());
+            for(size_t i=0;i<e.nodes.size();++i) modes[i]=std::distance(it->second[i].begin(),std::max_element(it->second[i].begin(),it->second[i].end()));
+            for(size_t i=1;i<e.nodes.size();++i) {
+                int parent=e.nodes[i].parent,from=modes[parent],to=modes[i];
+                double lower=0,upper=0;
+                for(size_t k=0;k<e.rates.size();++k) {
+                    const auto& matrix=e.component(k)->matrices.at(e.nodes[i].time);
+                    double before=0;for(int j=0;j<to;++j)before+=matrix[size_t(from)*e.s+j];
+                    const double weight=pattern_categories[pattern_id][k];
+                    lower+=weight*(before+matrix[size_t(from)*e.s+to]);
+                    // The upper tail includes mass beyond the numerical cap.
+                    upper+=weight*std::max(0.,1-before);
+                }
+                double tail=std::min(1.,2*std::min(lower,upper));
+                double surprise=-std::log(std::max(std::numeric_limits<double>::min(),tail));
+                branch<<family.id<<'\t'<<e.nodes[i].name<<'\t'<<e.nodes[parent].name<<'\t'<<means[i]-means[parent]
+                    <<'\t'<<from<<'\t'<<to<<'\t'<<to-from<<'\t'<<surprise<<'\n';
+            }
             for(size_t i=0;i<e.nodes.size();++i) {
                 const auto& p=it->second[i];double mean=0;for(int j=0;j<e.s;++j) mean+=j*p[j];
                 ancestral<<family.id<<'\t'<<e.nodes[i].name<<'\t'<<(e.nodes[i].parent<0?"NA":e.nodes[e.nodes[i].parent].name)<<'\t'

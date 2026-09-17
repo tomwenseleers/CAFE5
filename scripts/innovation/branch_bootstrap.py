@@ -82,7 +82,7 @@ def main():
    print(f'Completed refit {b+1}/{a.replicates}',flush=True)
  p_upper=(1+upper)/(a.replicates+1);p_lower=(1+lower)/(a.replicates+1);p_two=np.minimum(1,2*np.minimum(p_upper,p_lower))
  by,holm=adjust(p_two)
- fields=['Family ID','Node','parent','posterior_mean_change','p_upper','p_lower','p_two_sided','q_BY_all_family_branches','p_Holm_all_family_branches','bootstrap_replicates','method']
+ fields=list(rows[0])+['p_upper','p_lower','p_two_sided','q_BY_all_family_branches','p_Holm_all_family_branches','bootstrap_replicates','method']
  method='known_parameter_MC' if a.fixed_parameters else 'refitted_parametric_bootstrap'
  with (a.output/'branch_tests.tsv').open('w') as f:
   writer=csv.DictWriter(f,fieldnames=fields,delimiter='\t');writer.writeheader()
