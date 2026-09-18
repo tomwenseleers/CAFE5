@@ -1,0 +1,9 @@
+{
+  "source_species": 72,
+  "source_HOGs": 24502,
+  "source_HOGs_with_exactly_one_gene": 1,
+  "source_HOGs_occupied_in_one_species": 4790,
+  "retained_HOGs_with_exactly_one_gene_in_17tips": 769,
+  "of_these_also_present_outside_17tips": 769,
+  "interpretation": "HOGs are ascertained in a larger 72-species analysis. Conditioning on nonzero observations in 17 tips does not reproduce the HOG-construction ascertainment. This is a possible contributor to predictive mismatch, not a demonstrated exclusive cause or an exact characterization of OrthoFinder inclusion rules."
+}

@@ -1,0 +1,24 @@
+{
+  "kernel_0.2_0.3_0.7": 1.4432899320127035e-15,
+  "kernel_0.2_0_0.7": 2.6645352591003757e-15,
+  "kernel_0_0.3_0.7": 2.7755575615628914e-17,
+  "kernel_0_0_1": 0.0,
+  "kernel_0.2_0.3_0": 0.0,
+  "kernel_1e-14_0.3_0.7": 5.88418203051333e-15,
+  "kernel_0.5_0.2_5": 2.19824158875781e-14,
+  "moment_max_error": 7.105427357601002e-15,
+  "semigroup": "pass",
+  "large_immigration_no_underflow": "pass",
+  "independent_likelihood_error": 6.217248937900877e-15,
+  "ancestral_root_and_internal": "pass",
+  "zero_root_simulation_nonzero_families": 3000,
+  "invalid_arguments": "pass",
+  "simulation_mean": [
+    2.210366666666667,
+    2.2117333333333336
+  ],
+  "simulation_variance": [
+    0.8058458655555097,
+    0.7944356622224598
+  ]
+}

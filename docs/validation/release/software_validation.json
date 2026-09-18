@@ -1,0 +1,30 @@
+{
+  "legacy_tests": {
+    "test_cases": 206,
+    "assertions": 582,
+    "failed": 0
+  },
+  "workflow_smoke": {
+    "families": 200,
+    "branches": 4,
+    "refitted_datasets": 2,
+    "nominal_output": true,
+    "resume_verified": true,
+    "changed_input_rejected": true
+  },
+  "extended_gamma_smoke": {
+    "gamma_categories": 3,
+    "refitted_datasets": 2,
+    "fit_converged": "1",
+    "fit_cap_pass": "1",
+    "estimated_parameters": [
+      "lambda",
+      "mu",
+      "nu",
+      "alpha",
+      "epsilon",
+      "epsilon_zero"
+    ]
+  },
+  "limitations": "Smoke checks are software verification, not certification of statistical calibration."
+}

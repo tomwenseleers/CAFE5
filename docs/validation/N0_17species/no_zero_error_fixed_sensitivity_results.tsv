@@ -1,0 +1,26 @@
+parameter	value
+model	BDI_equal_birth_death
+lambda	0.014342555224354459
+nu	0.00030781412377776078
+negative_log_likelihood	104110.15072826728
+families	12577
+unique_patterns	3105
+max_count	180
+gamma_categories	6
+alpha	0.067014510260891391
+epsilon	0
+error_model_file	CAFE5-bdi/validation/focal_bootstrap/N0/final/no_zero_false_positive_error.txt
+alpha_at_bound	0
+alpha_identifiable	1
+root_mean	0.54075262082529418
+root_mean_estimated	0
+root_prior_file	
+root_prior_omitted_mass	1.1102230246251565e-16
+conditioned_on_observed	1
+log_inclusion_probability	-0.70865627689899591
+boundary_fits	1
+optimizer_converged	1
+truncation_nll_difference	0
+truncation_pass	1
+seed	20260917
+significance_status	use_branch_bootstrap_driver_for_calibrated_tail_tests

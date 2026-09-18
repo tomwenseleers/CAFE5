@@ -1,0 +1,13 @@
+{
+  "source_repository": "https://github.com/tomwenseleers/evodevo_waspcastes",
+  "count_source": "nextflow_runs/2_EXCON/2_EXCON_orthofinder_eggnogmapper_run/results_EXCON/orthofinder/Phylogenetic_Hierarchical_Orthogroups/N11.tsv",
+  "tree_source": "input_CAFE/tree_dating/Vespidae_dated_primary.nwk",
+  "families": 13742,
+  "tips": 15,
+  "max_count": 145,
+  "selection": "Frozen illustrative subset after 94 annotation-based exclusions from 13836 families. This screen is not exhaustive and the snapshot must not be described as TE-free. No count-size exclusions.",
+  "sha256": {
+    "counts.tsv": "4636a73e581f8a31fd858f2161d277b479c2cd7caff286e896a2a06d2aaaa4c7",
+    "tree.nwk": "3970d7b58e44eb86233a56c6c6470e7eb7cf1217d54d3a27bf2442c75c4bce3d"
+  }
+}

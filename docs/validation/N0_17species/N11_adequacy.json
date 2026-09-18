@@ -1,0 +1,181 @@
+{
+  "a": {
+    "observed": {
+      "families": 13836,
+      "species": 15,
+      "mean_count": 0.7540136841090874,
+      "mean_species_present": 10.358412836079792,
+      "single_species_fraction": 0.1276380456779416,
+      "one_gene_total_fraction": 0.0771176640647586,
+      "all_species_present_fraction": 0.42093090488580515,
+      "one_copy_every_species_fraction": 0.29603931772188496,
+      "differential_gt20_fraction": 0.002674183289968199
+    },
+    "fit": {
+      "model": "BDI_equal_birth_death",
+      "lambda": "0.016781998769928301",
+      "nu": "0.00046091442377704496",
+      "negative_log_likelihood": "97857.587305862253",
+      "families": "13836",
+      "unique_patterns": "2739",
+      "max_count": "180",
+      "gamma_categories": "6",
+      "alpha": "0.068416289737139618",
+      "epsilon": "0.015965936911008963",
+      "error_model_file": "",
+      "alpha_at_bound": "0",
+      "alpha_identifiable": "1",
+      "root_mean": "0.44323704575047229",
+      "root_mean_estimated": "1",
+      "root_prior_file": "",
+      "root_prior_omitted_mass": "1.1102230246251565e-16",
+      "conditioned_on_observed": "1",
+      "log_inclusion_probability": "-0.56028168211261398",
+      "boundary_fits": "0",
+      "optimizer_converged": "1",
+      "truncation_nll_difference": "0",
+      "truncation_pass": "1",
+      "seed": "20260917",
+      "significance_status": "use_branch_bootstrap_driver_for_calibrated_tail_tests"
+    },
+    "replicates": 4,
+    "seed": 929100,
+    "comparison": {
+      "mean_count": {
+        "observed": 0.7540136841090874,
+        "simulated_mean": 0.8745205743471138,
+        "simulated_min": 0.8723089524910861,
+        "simulated_max": 0.8782644309530693
+      },
+      "mean_species_present": {
+        "observed": 10.358412836079792,
+        "simulated_mean": 8.42660450997398,
+        "simulated_min": 8.37171147730558,
+        "simulated_max": 8.49161607400983
+      },
+      "single_species_fraction": {
+        "observed": 0.1276380456779416,
+        "simulated_mean": 0.31027753686036424,
+        "simulated_min": 0.3054350968488002,
+        "simulated_max": 0.316493206128939
+      },
+      "one_gene_total_fraction": {
+        "observed": 0.0771176640647586,
+        "simulated_mean": 0.28969716681121715,
+        "simulated_min": 0.2859207863544377,
+        "simulated_max": 0.29611159294593814
+      },
+      "all_species_present_fraction": {
+        "observed": 0.42093090488580515,
+        "simulated_mean": 0.36909150043365135,
+        "simulated_min": 0.36115929459381324,
+        "simulated_max": 0.37691529343740965
+      },
+      "one_copy_every_species_fraction": {
+        "observed": 0.29603931772188496,
+        "simulated_mean": 0.15067577334489737,
+        "simulated_min": 0.14527320034692107,
+        "simulated_max": 0.1566926857473258
+      },
+      "differential_gt20_fraction": {
+        "observed": 0.002674183289968199,
+        "simulated_mean": 0.01131107256432495,
+        "simulated_min": 0.010696733159872795,
+        "simulated_max": 0.011925411968777104
+      }
+    },
+    "interpretation": "Descriptive replicated-dataset checks at fitted parameters. Not calibrated significance tests, biological confidence intervals or proof of a global likelihood optimum."
+  },
+  "b": {
+    "observed": {
+      "families": 13836,
+      "species": 15,
+      "mean_count": 0.7540136841090874,
+      "mean_species_present": 10.358412836079792,
+      "single_species_fraction": 0.1276380456779416,
+      "one_gene_total_fraction": 0.0771176640647586,
+      "all_species_present_fraction": 0.42093090488580515,
+      "one_copy_every_species_fraction": 0.29603931772188496,
+      "differential_gt20_fraction": 0.002674183289968199
+    },
+    "fit": {
+      "model": "BDI_equal_birth_death",
+      "lambda": "0.016781649979477804",
+      "nu": "0.00046091176531053748",
+      "negative_log_likelihood": "97857.587306262008",
+      "families": "13836",
+      "unique_patterns": "2739",
+      "max_count": "180",
+      "gamma_categories": "6",
+      "alpha": "0.068416831858695515",
+      "epsilon": "0.015965893653200402",
+      "error_model_file": "",
+      "alpha_at_bound": "0",
+      "alpha_identifiable": "1",
+      "root_mean": "0.44323267722636889",
+      "root_mean_estimated": "1",
+      "root_prior_file": "",
+      "root_prior_omitted_mass": "1.1102230246251565e-16",
+      "conditioned_on_observed": "1",
+      "log_inclusion_probability": "-0.5602852228092039",
+      "boundary_fits": "0",
+      "optimizer_converged": "1",
+      "truncation_nll_difference": "0",
+      "truncation_pass": "1",
+      "seed": "20260917",
+      "significance_status": "use_branch_bootstrap_driver_for_calibrated_tail_tests"
+    },
+    "replicates": 4,
+    "seed": 928100,
+    "comparison": {
+      "mean_count": {
+        "observed": 0.7540136841090874,
+        "simulated_mean": 0.8910487135010118,
+        "simulated_min": 0.8801194950371013,
+        "simulated_max": 0.9074925315601812
+      },
+      "mean_species_present": {
+        "observed": 10.358412836079792,
+        "simulated_mean": 8.524230268863834,
+        "simulated_min": 8.48236484533102,
+        "simulated_max": 8.566420930904886
+      },
+      "single_species_fraction": {
+        "observed": 0.1276380456779416,
+        "simulated_mean": 0.30404379878577625,
+        "simulated_min": 0.30080948250939576,
+        "simulated_max": 0.30637467476149177
+      },
+      "one_gene_total_fraction": {
+        "observed": 0.0771176640647586,
+        "simulated_mean": 0.28452948829141367,
+        "simulated_min": 0.2811506215669269,
+        "simulated_max": 0.287149465163342
+      },
+      "all_species_present_fraction": {
+        "observed": 0.42093090488580515,
+        "simulated_mean": 0.3746205550737207,
+        "simulated_min": 0.37004914715235615,
+        "simulated_max": 0.37691529343740965
+      },
+      "one_copy_every_species_fraction": {
+        "observed": 0.29603931772188496,
+        "simulated_mean": 0.15419919051749062,
+        "simulated_min": 0.15098294304712345,
+        "simulated_max": 0.15763226366001734
+      },
+      "differential_gt20_fraction": {
+        "observed": 0.002674183289968199,
+        "simulated_mean": 0.012069962416883491,
+        "simulated_min": 0.011347210176351546,
+        "simulated_max": 0.012864989881468633
+      }
+    },
+    "interpretation": "Descriptive replicated-dataset checks at fitted parameters. Not calibrated significance tests, biological confidence intervals or proof of a global likelihood optimum."
+  },
+  "scope": "Exploratory six-category estimated-root/error fits on the matching15-species N11 tree. Two positive-interior starts, no full boundary audit or new N11 branch bootstrap. Counts and likelihoods across N0/N11 are not directly comparable because family definitions and tree differ.",
+  "input_sha256": {
+    "N11_Vespidae_counts.tsv": "c594ea94e7aa7741602a39dc16b502187a1efca42a174fc543a6efb46c019562",
+    "Vespidae_dated_primary.nwk": "3970d7b58e44eb86233a56c6c6470e7eb7cf1217d54d3a27bf2442c75c4bce3d"
+  }
+}

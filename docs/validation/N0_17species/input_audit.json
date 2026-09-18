@@ -1,0 +1,9 @@
+{
+  "scope": "N0, 17 species, all nonzero observed families, no size/root/TE/single-species exclusion",
+  "sha256": {
+    "N0.tsv": "820af31f1820fc7d4f6556ebe2300de351e4236430403642896c5fbd5e67299b",
+    "Vespidae_with_outgroups_dated_primary_counts.tsv": "1523210166b6400ad287fd62cb11c03292948c97ddedbf7edecb9b9f6df5ca0b",
+    "Vespidae_with_outgroups_dated_primary.nwk": "db5a79ea9c8f84bdb1878a03d9ff2b4c5615840a47869071c0e0e3e3554626f3"
+  },
+  "N11_batch_status": "Superseded by user choice of N0. Partial N11 refits preserved, not interpreted as a completed bootstrap."
+}

@@ -1,0 +1,7 @@
+parameter_set	gamma_categories	negative_log_likelihood	truncation_pass
+baseline24_parameters	48	97776.080930774508	1
+baseline24_parameters	96	97767.229324894768	1
+baseline24_parameters	24	97796.913114120005	1
+combined6_parameters	12	93670.006986743349	1
+combined6_parameters	24	93685.043571350645	1
+combined6_parameters	6	93627.798809901185	1

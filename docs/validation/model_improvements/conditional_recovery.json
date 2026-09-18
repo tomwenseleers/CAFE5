@@ -1,0 +1,27 @@
+{
+  "mu": {
+    "truth": 0.4,
+    "estimate": 0.42161684277659145,
+    "replay_nll_difference": 0.0,
+    "truncation_pass": "1"
+  },
+  "epsilon_zero": {
+    "truth": 0.02,
+    "estimate": 0.01979680810897325,
+    "replay_nll_difference": 0.0,
+    "truncation_pass": "1"
+  },
+  "root_zero": {
+    "truth": 0.3,
+    "estimate": 0.31940833428253607,
+    "replay_nll_difference": 0.0,
+    "truncation_pass": "1"
+  },
+  "root_shape": {
+    "truth": 1.7,
+    "estimate": 1.6582020937204878,
+    "replay_nll_difference": 0.0,
+    "truncation_pass": "1"
+  },
+  "scope": "One parameter estimated at a time, others known; validates parameter plumbing, not joint identifiability."
+}

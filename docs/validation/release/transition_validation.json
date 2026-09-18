@@ -1,0 +1,16 @@
+{
+  "independent_transition_score_max_abs_error": 6.661338147750939e-16,
+  "heldout_null_families": 2000,
+  "reference_families": 16000,
+  "branch_threshold": 0.01,
+  "branch_rejection_rates": {
+    "Node1": 0.0125,
+    "C": 0.0075
+  },
+  "family_rejection_rate": 0.045,
+  "limitations": "Known-parameter check at one regime; not certification of estimated-parameter calibration or model adequacy.",
+  "branch_rejection_rates_at_05": {
+    "Node1": 0.0495,
+    "C": 0.05
+  }
+}

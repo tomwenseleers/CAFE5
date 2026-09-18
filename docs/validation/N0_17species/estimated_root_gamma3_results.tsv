@@ -1,0 +1,25 @@
+parameter	value
+model	BDI_equal_birth_death
+lambda	0.033672681519110084
+nu	0.00023570106817341187
+negative_log_likelihood	104068.94755871121
+families	12577
+unique_patterns	3105
+max_count	180
+gamma_categories	3
+alpha	0.13615870908455885
+epsilon	0.012566582519295903
+error_model_file	
+alpha_at_bound	0
+alpha_identifiable	1
+root_mean	0.50378731924551667
+root_mean_estimated	1
+root_prior_file	
+root_prior_omitted_mass	0
+conditioned_on_observed	1
+log_inclusion_probability	-0.67469240422906118
+optimizer_converged	1
+truncation_nll_difference	0
+truncation_pass	1
+seed	20260917
+significance_status	use_branch_bootstrap_driver_for_calibrated_tail_tests

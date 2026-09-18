@@ -1,0 +1,10 @@
+{
+  "P_all_true_tip_counts_zero": 0.5063325084567909,
+  "P_any_observed_copy": 0.6326126995823301,
+  "epsilon_zero_to_one": 0.018850386882690306,
+  "fraction_of_observed_families_with_all_true_tip_counts_zero": 0.22122526013373228,
+  "fraction_of_observed_families_with_all_true_zero_and_exactly_one_false_copy": 0.18916068846939926,
+  "observed_fraction_exactly_one_gene_total": 0.0611433569213644,
+  "formula": "Pr(all true tips zero)*(1-(1-epsilon)^17)/Pr(any observed copy)",
+  "interpretation": "Model-implied fractions, not estimates of which real HOGs are false positives. Independent zero-to-one errors can create observed families with no true copies at any tip, contributing to the excessive predicted singleton frequency."
+}

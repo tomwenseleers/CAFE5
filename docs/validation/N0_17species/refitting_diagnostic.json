@@ -1,0 +1,20 @@
+{
+  "paired_datasets": 4,
+  "families_per_dataset": 12577,
+  "identical_simulation_sha256": [
+    "00689040ada16ef8434e79ef9659b13fb66ead5744734288cfaf170264586679",
+    "808f406bdfb21e4d24bd00df93d48a3e187a9e7e8df942bbc53226bd3a46611d",
+    "c34fc7393fe1937302c22b44df83d451602a893dc6bca313f1a6196b119b0d57",
+    "6a3ee507b3acd1577840fc2558ca10cd5d99fa3cb00deb0425d163e1e0dd561a"
+  ],
+  "manuscript_event_branch_p_change": {
+    "minimum": -0.0017292097312768331,
+    "median": -4.336808689942018e-19,
+    "maximum": 0.0005565272698362204
+  },
+  "manuscript_events_with_changed_raw_selection": {
+    "0.01": 0,
+    "0.05": 0
+  },
+  "interpretation": "Paired diagnostic of refitting parameters when scoring the same simulated datasets. It does not compare models with different parameter counts, measure power under alternatives, or replace the full refitted bootstrap. Monte Carlo uncertainty uses independent dataset pairs."
+}

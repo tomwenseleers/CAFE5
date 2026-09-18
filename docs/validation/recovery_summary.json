@@ -1,0 +1,14 @@
+{
+  "replicates": 12,
+  "families_per_replicate": 2500,
+  "true_lambda": 0.2,
+  "true_nu": 0.3,
+  "mean_estimates": {
+    "lambda": 0.1999069760586305,
+    "nu": 0.3027067145056458
+  },
+  "fixed_parameter_null_fraction_p_le_005": 0.035333333333333335,
+  "calibration_families": 1500,
+  "calibration_null_simulations": 5000,
+  "limitation": "One generating regime; fixed parameters only. Does not establish calibration after fitting parameters to the tested data or branch-specific significance."
+}

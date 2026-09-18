@@ -1,3 +1,56 @@
+# CAFE5 with birth–death–innovation inference
+
+This extension was motivated by **the zero-root problem in CAFE5's standard
+birth–death model**: how can we analyse a gene family that is present in some
+species but was absent from the common ancestor of the full tree?
+
+In a duplication–loss process, duplication requires an existing gene copy. Once
+a family has zero copies, it cannot gain any descendants through duplication
+alone. A family that starts at zero at the root therefore remains absent
+throughout the tree. Standard CAFE5 excludes families identified as absent at
+the root by default; its `--zero_root` option retains them but does not add a
+mechanism for gaining copies from zero. This makes it difficult to study families
+that originated after the root without restricting the analysis to a subtree.
+
+The `innovation-bdi` branch adds a **copy-independent innovation (gain) rate**.
+For a family with *n* copies, the gain rate is λn + ν and the loss rate is μn.
+The innovation term ν allows a family to acquire a copy even when none is present.
+Together with a root distribution that allows zero, this lets the model represent
+families that were absent at the root and appeared later. It also allows gains
+after extinction along a lineage.
+
+## Run an analysis
+
+Supply a CAFE count table and a rooted time tree. **To allow absence at the root**,
+use:
+
+```bash
+python3 scripts/innovation/analyze.py counts.tsv tree.nwk --root poisson
+```
+
+This estimates a Poisson root mean and includes zero among the possible ancestral
+counts. For clade-defined families assumed to have one copy at the root, use the
+fixed-root-one preset:
+
+```bash
+python3 scripts/innovation/analyze.py counts.tsv tree.nwk
+```
+
+The extension also fits separate duplication and loss rates, gamma variation
+among families, and count error. It keeps small and large families in the same
+analysis, checks the numerical count limits, and provides refitted-bootstrap
+family and branch tests. P values are nominal, without automatic FDR correction.
+Evolutionary rates are global across the tree; branch significance is supported,
+but separate lineage rate parameters are not.
+
+See [installation, assumptions and command examples](docs/innovation.md),
+[mathematical comparison with standard CAFE5](docs/innovation_mathematics.md),
+[model-fit benchmark](docs/innovation_benchmark.md), and
+[bootstrap validation and interpretation](docs/focal_bootstrap_methods.md).
+Install this branch from source using the linked instructions; the standard
+Bioconda package does not include this extension. The original CAFE5 interface
+and its documentation are retained below.
+
 # CAFE
 
 <div>
@@ -915,4 +968,3 @@ ideas. Thanks to:
 CAFE uses the EasyLogging logging framework. https://github.com/amrayn/easyloggingpp
 
 CAFE uses the DocTest testing framework. https://github.com/onqtam/doctest
-

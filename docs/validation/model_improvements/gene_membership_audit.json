@@ -1,0 +1,92 @@
+{
+  "Ancistrocerus_nigricornis": {
+    "listed_gene_memberships": 9060,
+    "unique_gene_identifiers": 9060,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Dolichovespula_media": {
+    "listed_gene_memberships": 10103,
+    "unique_gene_identifiers": 10103,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Dolichovespula_saxonica": {
+    "listed_gene_memberships": 10331,
+    "unique_gene_identifiers": 10331,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Dolichovespula_sylvestris": {
+    "listed_gene_memberships": 9608,
+    "unique_gene_identifiers": 9608,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Mischocyttarus_mexicanus": {
+    "listed_gene_memberships": 13548,
+    "unique_gene_identifiers": 13548,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Polistes_canadensis": {
+    "listed_gene_memberships": 9815,
+    "unique_gene_identifiers": 9815,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Polistes_dominula": {
+    "listed_gene_memberships": 10090,
+    "unique_gene_identifiers": 10090,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Polistes_exclamans": {
+    "listed_gene_memberships": 12774,
+    "unique_gene_identifiers": 12774,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Polistes_fuscatus": {
+    "listed_gene_memberships": 10619,
+    "unique_gene_identifiers": 10619,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Vespa_crabro": {
+    "listed_gene_memberships": 10042,
+    "unique_gene_identifiers": 10042,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Vespa_mandarinia": {
+    "listed_gene_memberships": 10046,
+    "unique_gene_identifiers": 10046,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Vespa_velutina": {
+    "listed_gene_memberships": 9985,
+    "unique_gene_identifiers": 9985,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Vespula_germanica": {
+    "listed_gene_memberships": 10617,
+    "unique_gene_identifiers": 10617,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Vespula_pensylvanica": {
+    "listed_gene_memberships": 9904,
+    "unique_gene_identifiers": 9904,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  },
+  "Vespula_vulgaris": {
+    "listed_gene_memberships": 9946,
+    "unique_gene_identifiers": 9946,
+    "identifiers_repeated_across_HOGs": 0,
+    "maximum_memberships_per_gene": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "expected_nll": 15.556240362177377,
+  "actual_nll": 15.556240362177377,
+  "inclusion_probability": 0.057958477508650574,
+  "cap": 160,
+  "truncation_difference": 0.0
+}

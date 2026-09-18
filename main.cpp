@@ -1,4 +1,6 @@
 #include <random>
+#include <string>
+#include "src/innovation.h"
 #include "src/easylogging++.h"
 
 INITIALIZE_EASYLOGGINGPP
@@ -18,5 +20,8 @@ int main(int argc, char *const argv[]) {
     defaultConf.set(el::Level::Warning, el::ConfigurationType::Format, "WARNING: %msg");
     el::Loggers::reconfigureLogger("default", defaultConf);
 
-    cafe5(argc, argv);
+    for (int i=1; i<argc; ++i)
+        if (std::string(argv[i]) == "--innovation")
+            return innovation::run(argc, argv);
+    return cafe5(argc, argv);
 }

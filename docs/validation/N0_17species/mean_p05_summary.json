@@ -1,0 +1,38 @@
+{
+  "Node3": {
+    "manuscript_node": "20",
+    "manuscript_counts": {
+      "expansion": 10,
+      "contraction": 2
+    },
+    "new_all_counts": {
+      "expansion": 86,
+      "contraction": 16
+    },
+    "new_nonTE_counts": {
+      "expansion": 74,
+      "contraction": 15
+    },
+    "same_direction_replicated": 11,
+    "same_direction_replicated_all": 11,
+    "MC_uncertain_selected": 0
+  },
+  "Node13": {
+    "manuscript_node": "25",
+    "manuscript_counts": {
+      "expansion": 8,
+      "contraction": 2
+    },
+    "new_all_counts": {
+      "contraction": 116,
+      "expansion": 27
+    },
+    "new_nonTE_counts": {
+      "contraction": 100,
+      "expansion": 27
+    },
+    "same_direction_replicated": 9,
+    "same_direction_replicated_all": 9,
+    "MC_uncertain_selected": 4
+  }
+}

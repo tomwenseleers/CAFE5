@@ -1,0 +1,102 @@
+{
+  "completed_datasets": 24,
+  "observed": {
+    "mean_count": 0.8276452347656086,
+    "mean_species_present": 12.062892581696747,
+    "single_species_fraction": 0.1232408364474835,
+    "all_species_present_fraction": 0.42641329410829293,
+    "max_count": 141,
+    "differential_gt20_fraction": 0.004452572155521984,
+    "mean_counts_by_species": {
+      "Ancistrocerus_nigricornis": 0.7299037926373539,
+      "Mischocyttarus_mexicanus": 1.09016458614932,
+      "Polistes_dominula": 0.8054384988471018,
+      "Polistes_fuscatus": 0.8458296891150513,
+      "Polistes_exclamans": 1.0256818001113144,
+      "Polistes_canadensis": 0.7813469030770454,
+      "Vespula_germanica": 0.8521109962630198,
+      "Vespula_pensylvanica": 0.7880257613103284,
+      "Vespula_vulgaris": 0.7918422517293472,
+      "Vespa_crabro": 0.7988391508308818,
+      "Vespa_mandarinia": 0.8001908245209509,
+      "Vespa_velutina": 0.7950226604118629,
+      "Dolichovespula_media": 0.8079828257931144,
+      "Dolichovespula_saxonica": 0.8248389918104476,
+      "Dolichovespula_sylvestris": 0.7659219209668442,
+      "Anoplius_nigerrimus": 0.7830166176353661,
+      "Tiphia_femorata": 0.7838117198059951
+    }
+  },
+  "predictive": {
+    "mean_count": {
+      "observed": 0.8276452347656086,
+      "replicate_mean": 0.9419643622734933,
+      "replicate_2.5_percentile": 0.9204093373057262,
+      "replicate_97.5_percentile": 0.9626297302732812,
+      "observed_outside_interval": true
+    },
+    "mean_species_present": {
+      "observed": 12.062892581696747,
+      "replicate_mean": 9.819554875301476,
+      "replicate_2.5_percentile": 9.67711099626302,
+      "replicate_97.5_percentile": 9.92269221594975,
+      "observed_outside_interval": true
+    },
+    "single_species_fraction": {
+      "observed": 0.1232408364474835,
+      "replicate_mean": 0.2925379661286475,
+      "replicate_2.5_percentile": 0.28511369961039995,
+      "replicate_97.5_percentile": 0.2974000159020434,
+      "observed_outside_interval": true
+    },
+    "all_species_present_fraction": {
+      "observed": 0.42641329410829293,
+      "replicate_mean": 0.3730685643105139,
+      "replicate_2.5_percentile": 0.36537727597996345,
+      "replicate_97.5_percentile": 0.37877077204420767,
+      "observed_outside_interval": true
+    },
+    "max_count": {
+      "observed": 141,
+      "replicate_mean": 98.0,
+      "replicate_2.5_percentile": 75.6,
+      "replicate_97.5_percentile": 128.4,
+      "observed_outside_interval": true
+    },
+    "differential_gt20_fraction": {
+      "observed": 0.004452572155521984,
+      "replicate_mean": 0.013824838991810447,
+      "replicate_2.5_percentile": 0.011711854973364078,
+      "replicate_97.5_percentile": 0.015794704619543614,
+      "observed_outside_interval": true
+    }
+  },
+  "parameter_bootstrap_quantiles": {
+    "lambda": {
+      "q025": 0.01386469731773561,
+      "median": 0.014431692382081307,
+      "q975": 0.015003371094795284
+    },
+    "nu": {
+      "q025": 0.0002926824651569374,
+      "median": 0.00030173385712412265,
+      "q975": 0.0003162108499400479
+    },
+    "alpha": {
+      "q025": 0.06579374384789698,
+      "median": 0.06687252728157261,
+      "q975": 0.06777275232364537
+    },
+    "epsilon": {
+      "q025": 0.018257808972060578,
+      "median": 0.01880562970330952,
+      "q975": 0.01912799580326576
+    },
+    "root_mean": {
+      "q025": 0.5279178416017731,
+      "median": 0.5405639947335708,
+      "q975": 0.5505436323294555
+    }
+  },
+  "interpretation": "Predictive intervals describe replicated datasets under the fitted model. Parameter quantiles are parametric-bootstrap percentiles, not a full model-uncertainty analysis."
+}
