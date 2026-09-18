@@ -204,8 +204,9 @@ For reconstructed parent/child states a,b and transition matrix P, the legacy
 branch calculation is a probability-ordering mid-p:
 
 ```math
-p_{edge}^{legacy}=\sum_{m:P_{am}<P_{ab}}P_{am}
-+\tfrac{1}{2}\sum_{m:P_{am}=P_{ab}}P_{am}.
+p_{\mathrm{edge}}^{\mathrm{legacy}}
+=\sum_{m\,:\,P_{am}\lt P_{ab}} P_{am}
++\frac{1}{2}\sum_{m\,:\,P_{am}=P_{ab}} P_{am}.
 ```
 
 The implemented sum has a finite count range. It conditions on reconstructed
