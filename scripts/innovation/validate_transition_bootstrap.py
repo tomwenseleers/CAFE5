@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent transition-score check and null operating characteristics at 1%."""
+"""Independent transition-score check and null operating characteristics at 1% and 5%."""
 import argparse,csv,json,subprocess
 from pathlib import Path
 import numpy as np
@@ -29,6 +29,8 @@ obs=a.output/'observed';run(common+['--simulate',2000,'--seed',1701,'-o',obs]);r
 out=a.output/'reference';driver=Path(__file__).with_name('pooled_bootstrap.py')
 run(['python3',driver,a.binary,'--tree',tree,'--observed',obs,'--output',out,'--replicates',8,'--workers',2,'--threads',1,'--seed',1741,'--nodes','Node1','C','--minimum-cap',35,'--fixed'])
 r=read(out/'focal_tests.tsv');summary={'independent_transition_score_max_abs_error':max(errors),'heldout_null_families':2000,'reference_families':16000,'branch_threshold':.01,'branch_rejection_rates':{b:sum(float(x['branch_p'])<.01 for x in r if x['Node']==b)/2000 for b in ['Node1','C']},'family_rejection_rate':sum(float(x['family_p'])<.05 for x in r if x['Node']=='Node1')/2000,'limitations':'Known-parameter check at one regime; not certification of estimated-parameter calibration or model adequacy.'}
+summary['branch_rejection_rates_at_05']={b:sum(float(x['branch_p'])<.05 for x in r if x['Node']==b)/2000 for b in ['Node1','C']}
 assert all(v<.025 for v in summary['branch_rejection_rates'].values()),summary
+assert all(v<.075 for v in summary['branch_rejection_rates_at_05'].values()),summary
 assert summary['family_rejection_rate']<.075,summary
 (a.output/'validation.json').write_text(json.dumps(summary,indent=2)+'\n');print(json.dumps(summary,indent=2))

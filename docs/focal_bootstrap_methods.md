@@ -58,6 +58,22 @@ statistics equivalent. No multiplicity adjustment is used to reproduce the
 requested decision rule; BY and Holm values across the two focal branches are
 provided as supplementary columns, subject to the bootstrap approximation.
 
+At the user's additional request, the report also applies **nominal family
+p < 0.05 and branch p < 0.05** to the same calibrated p-values. This changes only
+the reporting cutoff; it does not refit the model, alter the bootstrap reference
+distribution, or apply an FDR correction. The original manuscript's 22 events
+remain the reference set for measuring recovery. Both cutoffs have separately
+labelled HOG tables and Monte Carlo threshold-uncertainty flags. The accompanying
+R script independently reproduces decisions and same-direction overlap.
+
+An increase in the number of fitted parameters does not automatically decrease
+significance in these tests. Additional flexibility may explain variation that
+was unusual under a simpler model, and refitting changes the null statistic
+distribution; either can move particular p-values. There is no generic
+degrees-of-freedom subtraction applied here. The changed family inclusion,
+root likelihood and branch statistic also prevent attribution of all differences
+to the number of parameters alone.
+
 ## Pooled, refitted parametric bootstrap
 
 Each replicate simulates an entire dataset with the same number of observed
@@ -74,6 +90,13 @@ This is an optimization shortcut, not a Gaussian approximation to the test-stati
 distribution. Boundary audit results are retained. A small-tree comparison of full
 and interior fits agreed in NLL to 4e-9. Failed fits are retained and stop the run, rather than being
 silently omitted or replaced by a more convenient random seed.
+
+Independent starts are essential on the empirical mixture likelihood. An initial
+six-category solution had NLL 103192.174094, whereas additional starts found
+103063.841816. Three further starts reproduced the better solution within 3e-8.
+The bootstrap started at the inferior solution was stopped and retained as
+superseded, rather than mixed with simulations from the final fit. Final analyses
+use a separate directory and generating-parameter manifest.
 
 For replicate r with n simulated families, define the lower-tail estimate
 

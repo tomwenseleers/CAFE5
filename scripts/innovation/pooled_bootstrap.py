@@ -47,7 +47,7 @@ def main():
  previous=a.output/'method.json'
  if previous.exists():
   old=json.loads(previous.read_text())
-  for key in ['method','families_per_dataset','seed','nodes','parameters','branch_statistic','root_mean','root_mean_estimated','tree_sha256','observed_family_results_sha256']:
+  for key in ['method','families_per_dataset','seed','nodes','parameters','branch_statistic','root_mean','root_mean_estimated','tree_sha256','observed_family_results_sha256','binary_sha256','interior_refits','boundary_audits']:
    if key in old and old[key]!=manifest[key]:raise ValueError('Cannot resume with changed '+key)
  previous.write_text(json.dumps(manifest,indent=2)+'\n')
  def run(args,log):
@@ -73,7 +73,7 @@ def main():
     if interior and any(theta[k]>0 and float(result[k])<theta[k]/10 for k in ['lambda','nu','epsilon']):
      args.remove('--skip-boundary-fits');status=run(args,folder/f'boundary_fallback_cap{cap}.log');result=read_results(prefix)
      if status!=0:raise RuntimeError(f'Boundary fallback {b} failed; see logs')
-    break
+    if result.get('truncation_pass')=='1' and result.get('optimizer_converged')=='1':break
    if result.get('optimizer_converged')=='1' and result.get('truncation_pass')=='0':
     cap*=2
     if cap>2400:raise RuntimeError(f'Replicate {b} requires cap above 2400; retained for explicit numerical investigation')

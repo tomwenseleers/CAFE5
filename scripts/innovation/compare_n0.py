@@ -5,7 +5,8 @@ from pathlib import Path
 from compare_manuscript import read,write
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('repository',type=Path);p.add_argument('observed',type=Path);p.add_argument('tests',type=Path);p.add_argument('output',type=Path);p.add_argument('--statistic',choices=['transition','mean'],default='transition');a=p.parse_args();a.output.mkdir(exist_ok=True,parents=True)
+ p=argparse.ArgumentParser();p.add_argument('repository',type=Path);p.add_argument('observed',type=Path);p.add_argument('tests',type=Path);p.add_argument('output',type=Path);p.add_argument('--statistic',choices=['transition','mean'],default='transition');p.add_argument('--family-threshold',type=float,default=.05);p.add_argument('--branch-threshold',type=float,default=.01);a=p.parse_args();a.output.mkdir(exist_ok=True,parents=True)
+ if not 0<a.family_threshold<1 or not 0<a.branch_threshold<1:raise ValueError('Thresholds must be between zero and one')
  source=a.repository/'nextflow_runs/2_EXCON/3_EXCON_CAFE_run/results_EXCON/cafe/base/N0.tsv'
  hogs={r['HOG']:r for r in read(source)}
  old=read(a.repository/'output/focal_node_significant_changes_annotated.tsv')
@@ -56,9 +57,11 @@ def main():
   for r in tests:
    r['transition_branch_p']=r['branch_p'];r['branch_p']=r['mean_change_branch_p'];r['branch_MC_low']=r['mean_change_MC_low'];r['branch_MC_high']=r['mean_change_MC_high'];r['selected_raw_thresholds']=r['selected_mean_change_test']
    r['direction']='expansion' if float(r['posterior_mean_change'])>0 else 'contraction' if float(r['posterior_mean_change'])<0 else 'unchanged'
-   r['MC_threshold_uncertain']=str((float(r['family_MC_low'])<.05<=float(r['family_MC_high']) and float(r['branch_MC_low'])<.01) or (float(r['branch_MC_low'])<.01<=float(r['branch_MC_high']) and float(r['family_MC_low'])<.05))
    r['q_BY_focal_branches']=r.get('mean_change_q_BY_focal_branches','NA');r['p_Holm_focal_branches']=r.get('mean_change_p_Holm_focal_branches','NA')
- for r in tests:r['branch_test_statistic']=a.statistic
+ for r in tests:
+  r['branch_test_statistic']=a.statistic;r['family_threshold']=a.family_threshold;r['branch_threshold']=a.branch_threshold
+  r['selected_raw_thresholds']=str(float(r['family_p'])<a.family_threshold and float(r['branch_p'])<a.branch_threshold and r['direction']!='unchanged')
+  r['MC_threshold_uncertain']=str((float(r['family_MC_low'])<a.family_threshold<=float(r['family_MC_high']) and float(r['branch_MC_low'])<a.branch_threshold) or (float(r['branch_MC_low'])<a.branch_threshold<=float(r['branch_MC_high']) and float(r['family_MC_low'])<a.family_threshold))
  for r in tests:
   if r['Node'] not in mapping:continue
   h=r['Family ID'];oldnode=mapping[r['Node']];prior=old_index.get((h,oldnode),{})
