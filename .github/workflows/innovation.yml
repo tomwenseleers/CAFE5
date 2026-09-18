@@ -29,3 +29,5 @@ jobs:
         run: python3 scripts/innovation/validate_improvements.py build/cafe5 validation/improvements
       - name: Conditional recovery of added model parameters
         run: python3 scripts/innovation/validate_improvement_recovery.py build/cafe5 validation/improvement_recovery
+      - name: Exact conditional simulation at rare-observation boundaries
+        run: python3 scripts/innovation/validate_conditional_simulation.py build/cafe5 validation/conditional_simulation

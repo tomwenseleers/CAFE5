@@ -443,31 +443,95 @@ struct Engine {
         }
         return post;
     }
-    // Exact, unbounded distribution sampling, independent of transition truncation.
-    std::vector<int> sample(std::mt19937& rng) const {
-        std::discrete_distribution<int> root(prior.begin(),prior.end());
+    // Exact unbounded branch simulation. Immigration events are independent of
+    // copy number, so explicitly placed arrivals can also be simulated without
+    // changing the birth/death law between them.
+    int sample_branch(int parent,double time,double immigration,std::mt19937& rng) const {
+        auto c=bd_coefficients(lambda,mu,time);
+        int survivors=std::binomial_distribution<int>(parent,std::min(1.,std::max(0.,c.survival)))(rng);
+        long long value=survivors;
+        auto poisson_sample=[&](double mean)->int {
+            if(!std::isfinite(mean)||mean>1e8||mean<0)throw std::runtime_error("Simulation intensity overflow");
+            return mean==0?0:std::poisson_distribution<int>(mean)(rng);
+        };
+        if(lambda>0&&time>0) {
+            double scale=c.q/c.a;
+            if(!std::isfinite(scale))throw std::runtime_error("Simulation geometric scale overflow");
+            if(scale>0&&survivors)value+=poisson_sample(std::gamma_distribution<double>(survivors,scale)(rng));
+            if(scale>0&&immigration>0)value+=poisson_sample(std::gamma_distribution<double>(immigration/lambda,scale)(rng));
+        } else if(immigration>0)value+=poisson_sample(immigration*(mu==0?time:-std::expm1(-mu*time)/mu));
+        if(value>100000000)throw std::runtime_error("Simulation count overflow");
+        return int(value);
+    }
+    // When proposal_observed=true, sample conditional on the necessary event B:
+    // a positive root OR at least one immigrant OR an observed false occurrence
+    // with zero root and no immigrants. Then reject if all observed tips are zero.
+    // B has the same probability in every gamma category (nu is global), so the
+    // Model-level category draw keeps its original weights. This avoids millions
+    // of empty proposals when the root-zero mass is near one. It is exact, not an
+    // approximation replacing rare immigrant events by a single event.
+    std::vector<int> sample(std::mt19937& rng,bool proposal_observed=false) const {
+        Vec root_weights=prior,cumulative(nodes.size(),0),error0=error.probabilities(0);
+        for(size_t i=1;i<nodes.size();++i)cumulative[i]=cumulative[i-1]+nodes[i].time;
+        double total=cumulative.back(),x=nu*total,positive_error=0;
+        for(size_t j=0;j<error0.size();++j)if(error.deltas[j]>0)positive_error+=error0[j];
+        positive_error=std::min(1.,positive_error);
+        double log_no_error=positive_error==1?-INF:taxa.size()*std::log1p(-positive_error);
+        double b0=-std::expm1(-x+log_no_error);
+        if(proposal_observed)root_weights[0]*=b0;
+        if(std::accumulate(root_weights.begin(),root_weights.end(),0.)<=0)throw std::runtime_error("Zero observed simulation proposal probability");
+        std::discrete_distribution<int> root(root_weights.begin(),root_weights.end());
         for(int attempt=0;attempt<1000000;++attempt) {
-            std::vector<int> values(nodes.size()),y(taxa.size()); values[0]=root(rng);
-            for(size_t i=1;i<nodes.size();++i) {
-                double t=nodes[i].time;int parent=values[nodes[i].parent];
-                auto c=bd_coefficients(lambda,mu,t);
-                int survivors=std::binomial_distribution<int>(parent,std::min(1.,std::max(0.,c.survival)))(rng);
-                long long value=survivors;
-                auto poisson_sample=[&](double mean)->int {
-                    if(!std::isfinite(mean)||mean>1e8||mean<0)throw std::runtime_error("Simulation intensity overflow");
-                    return mean==0?0:std::poisson_distribution<int>(mean)(rng);
-                };
-                if(lambda>0&&t>0) {
-                    double scale=c.q/c.a;
-                    if(!std::isfinite(scale))throw std::runtime_error("Simulation geometric scale overflow");
-                    if(scale>0&&survivors)value+=poisson_sample(std::gamma_distribution<double>(survivors,scale)(rng));
-                    if(scale>0&&nu>0)value+=poisson_sample(std::gamma_distribution<double>(nu/lambda,scale)(rng));
-                } else if(nu>0) value+=poisson_sample(nu*(mu==0?t:-std::expm1(-mu*t)/mu));
-                if(value>100000000)throw std::runtime_error("Simulation count overflow");
-                values[i]=int(value);
+            std::vector<int> values(nodes.size()),y(taxa.size());values[0]=root(rng);
+            std::vector<Vec> arrivals(nodes.size());bool explicit_arrivals=proposal_observed&&values[0]==0;
+            if(explicit_arrivals) {
+                double immigrant_probability=-std::expm1(-x)/b0;
+                if(!std::bernoulli_distribution(std::min(1.,immigrant_probability))(rng)) {
+                    // No true copies anywhere. Sample the observation law
+                    // conditional on at least one false positive directly.
+                    Vec positive_weights=error0;
+                    for(size_t j=0;j<error0.size();++j)if(error.deltas[j]<=0)positive_weights[j]=0;
+                    std::discrete_distribution<int> nonzero(positive_weights.begin(),positive_weights.end());
+                    bool have_positive=false;
+                    for(size_t i=0;i<taxa.size();++i) {
+                        if(have_positive)y[i]=error.sample(0,rng);
+                        else {
+                            double denominator=positive_error==1?1:-std::expm1((taxa.size()-i)*std::log1p(-positive_error));
+                            if(std::bernoulli_distribution(std::min(1.,positive_error/denominator))(rng)) {
+                                y[i]=error.deltas[nonzero(rng)];have_positive=true;
+                            }
+                        }
+                    }
+                    return y;
+                }
+                if(x<=0||!std::isfinite(x)||x>1e6)throw std::runtime_error("Invalid conditional immigration intensity");
+                int events;
+                if(x<1) {
+                    events=1;double probability=x/std::expm1(x),cdf=probability;
+                    double u=std::uniform_real_distribution<double>(0,1)(rng);
+                    while(u>cdf) {
+                        ++events;probability*=x/events;double next=cdf+probability;
+                        if(next==cdf)break; // remaining tail is below floating-point resolution
+                        cdf=next;
+                    }
+                } else do {events=std::poisson_distribution<int>(x)(rng);} while(events==0);
+                for(int event=0;event<events;++event) {
+                    double position=std::uniform_real_distribution<double>(0,total)(rng);
+                    size_t branch=std::upper_bound(cumulative.begin(),cumulative.end(),position)-cumulative.begin();
+                    if(branch>=nodes.size())branch=nodes.size()-1;
+                    arrivals[branch].push_back(position-cumulative[branch-1]);
+                }
             }
-            for(size_t i=0;i<nodes.size();++i) if(nodes[i].leaf>=0) y[nodes[i].leaf]=error.sample(values[i],rng);
-            if(!conditioned||std::accumulate(y.begin(),y.end(),0)>0) return y;
+            for(size_t i=1;i<nodes.size();++i) {
+                if(!explicit_arrivals)values[i]=sample_branch(values[nodes[i].parent],nodes[i].time,nu,rng);
+                else {
+                    std::sort(arrivals[i].begin(),arrivals[i].end());int value=values[nodes[i].parent];double last=0;
+                    for(double at:arrivals[i]) {value=sample_branch(value,std::max(0.,at-last),0,rng)+1;last=at;}
+                    values[i]=sample_branch(value,std::max(0.,nodes[i].time-last),0,rng);
+                }
+            }
+            for(size_t i=0;i<nodes.size();++i)if(nodes[i].leaf>=0)y[nodes[i].leaf]=error.sample(values[i],rng);
+            if(!conditioned||std::accumulate(y.begin(),y.end(),0)>0)return y;
         }
         throw std::runtime_error("Observed-family rejection simulation exhausted attempts");
     }
@@ -554,7 +618,7 @@ struct Model:Engine {
     std::vector<int> sample(std::mt19937& rng) const {
         for(int attempt=0;attempt<1000000;++attempt) {
             size_t k=weights.size()==1?0:std::discrete_distribution<int>(weights.begin(),weights.end())(rng);
-            auto y=component(k)->sample(rng);
+            auto y=component(k)->sample(rng,observed_condition);
             if(!observed_condition||std::accumulate(y.begin(),y.end(),0)>0)return y;
         }
         throw std::runtime_error("Observed-mixture simulation exhausted attempts");
@@ -641,7 +705,7 @@ static void usage() {
       "--unconditioned: disable ascertainment correction AND simulation rejection\n"
       "--no-truncation-check: skip final doubled-state-space likelihood check\n"
       "--matrix-time T --matrix-output FILE --lambda L --nu N: export transition matrix\n"
-      "--gamma-cats K (1); --alpha A (otherwise estimated when K>1)\n"
+      "--gamma-cats K (1, maximum 128); --alpha A (otherwise estimated when K>1)\n"
       "--epsilon E (fixed) OR --estimate-epsilon OR --error-model FILE\n"
       "Gamma scales duplication/loss only; branch-specific rates and legacy p-values are unsupported.\n";
 }
@@ -713,7 +777,7 @@ int run(int argc,char *const argv[]) {
             auto a=transition_asymmetric(o.maximum,o.lambda,o.mu<0?o.lambda:o.mu,o.nu,o.matrix_time);auto f=output(o.matrix_file);
             for(int i=0;i<=o.maximum;++i) {for(int j=0;j<=o.maximum;++j) f<<(j?"\t":"")<<a[size_t(i)*(o.maximum+1)+j];f<<'\n';} return 0;
         }
-        if(o.categories<1||o.categories>32||o.epsilon<0||o.epsilon>=.5||
+        if(o.categories<1||o.categories>128||o.epsilon<0||o.epsilon>=.5||
             (o.alpha!=-1&&(o.alpha<.05||o.alpha>100))||(o.categories==1&&o.alpha!=-1))
             throw std::runtime_error("Invalid gamma/error settings");
         if(int(o.epsilon_set)+int(o.estimate_epsilon)+int(!o.error_file.empty())>1)
@@ -745,7 +809,7 @@ int run(int argc,char *const argv[]) {
           <<"\nconditioned_on_observed\t"<<e.observed_condition<<"\nlog_inclusion_probability\t"<<inc
           <<"\nboundary_fits\t"<<o.boundary_fits<<"\noptimizer_converged\t"<<f.converged<<"\ntruncation_nll_difference\t"<<delta
           <<"\ntruncation_pass\t"<<(o.check&&std::isfinite(delta)&&std::abs(delta)<.01)
-          <<"\nseed\t"<<o.seed<<"\nsignificance_status\tuse_branch_bootstrap_driver_for_calibrated_tail_tests\n";
+          <<"\nseed\t"<<o.seed<<"\nsignificance_status\t"<<((o.mu>=0||o.estimate_mu||f.e0>=0||o.root_family!="poisson")?"extended_model_requires_matching_calibrated_bootstrap_driver":"use_branch_bootstrap_driver_for_calibrated_tail_tests")<<"\n";
         if(o.likelihood_only) {
             if(o.bootstrap) throw std::runtime_error("--likelihood-only cannot be combined with --bootstrap");
             std::cout<<"BDI lambda="<<f.l<<" nu="<<f.n<<" nll="<<f.score<<" truncation_delta="<<delta<<'\n';

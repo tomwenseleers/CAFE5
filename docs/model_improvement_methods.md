@@ -80,3 +80,50 @@ validated. This prevents silently simulating or refitting an equal-rate model
 when the input fit used unequal rates or a different root/error law. The new
 predictive-count script does replay every model option. Predictive simulations
 are descriptive checks, not calibrated branch significance tests.
+
+## A structural per-species predictive check
+
+The focal tree is ultrametric to 8e-9 time units: every root-to-tip distance is
+110. For a homogeneous generator Q_g shared across branches, root distribution
+pi and shared observation matrix E, every tip has the same marginal distribution
+pi * exp(Q_g*110) * E, also after mixing over g. Let A denote at least one nonzero
+observed tip. Since Y_i=0 whenever A fails,
+
+    E[Y_i | A] = E[Y_i] / Pr(A),
+
+which is identical for every species. Positive-count marginal probabilities,
+and hence conditional zero fractions, are also identical. A more flexible global
+root law or unequal but global duplication/loss rates does not remove this
+restriction. Sampling variation remains possible and must be assessed with
+replicated datasets.
+
+Observed mean counts per N11 HOG range from about 0.655 in Ancistrocerus to 0.979
+in Mischocyttarus (Polistes exclamans: 0.923). Gene identifiers do not overlap
+between N11 HOGs, so repeated membership is not the explanation. A persistent
+predictive failure here would motivate lineage-specific processes, systematic
+species-specific observation differences, or a better ascertainment model. Count
+data alone do not identify which biological or technical explanation is correct.
+
+
+## Exact simulation conditional on an observed family
+
+For rare-observation fits, rejection from the unconditional population can be
+prohibitively slow. We instead propose conditional on the necessary event B:
+a positive root, at least one immigration event anywhere on the tree, or a false
+positive observation with root zero and no immigration. For total branch length T,
+root-zero mass p0, false-positive probability e0 and n tips,
+
+    P(B) = (1-p0) + p0 [1-exp(-nu*T)(1-e0)^n].
+
+The root-zero proposal weight is multiplied by the term in brackets. For a
+zero root, immigrant counts are zero-truncated Poisson(nu*T), placed uniformly
+on total branch length; ordinary birth/death evolution occurs between events.
+The alternative with no immigrants samples the error law conditional on at least
+one positive observation. We then reject any all-zero observed profile.
+Because A={observed nonzero} is a subset of B, this produces exactly P(Y|A).
+P(B) is identical across gamma categories under the current global innovation,
+root and error assumptions, so categories retain their original proposal weights.
+The algorithm includes multiple immigrants and is not a rare-event approximation.
+Independent analytic tests cover rare immigration, rare errors, competing rare
+root/gain events and multiple arrivals. Finite-precision tails and count/intensity
+overflow guards remain explicit numerical limits.

@@ -5,6 +5,9 @@ from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('binary',type=Path);p.add_argument('--output',type=Path,required=True);p.add_argument('--counts',type=Path,required=True);p.add_argument('--tree',type=Path,required=True);p.add_argument('--workers',type=int,default=4);p.add_argument('--threads',type=int,default=2);p.add_argument('--models',nargs='*');p.add_argument('--iterations',type=int,default=1600);a=p.parse_args();a.binary=a.binary.resolve();a.output.mkdir(parents=True,exist_ok=True)
 models={
  'baseline':(6,[]),
+ 'root01':(6,['--root-family','hurdle-poisson','--root-zero','.404','--estimate-root-zero']),
+ 'root01_asymmetric':(6,['--root-family','hurdle-poisson','--root-zero','.404','--estimate-root-zero','--estimate-mu','--initial-mu','.02']),
+ 'root01_zero_error0':(6,['--root-family','hurdle-poisson','--root-zero','.404','--estimate-root-zero','--epsilon-zero','0']),
  'gamma12':(12,[]), 'gamma24':(24,[]),
  'asymmetric':(6,['--estimate-mu','--initial-mu','.02']),
  'zero_error0':(6,['--epsilon-zero','0']),
@@ -19,6 +22,8 @@ def read(prefix):
 def one(item):
  name,(cats,extra)=item;folder=a.output/name;folder.mkdir(exist_ok=True);prefix=folder/'fit';done=folder/'audit.json'
  cmd=[str(a.binary),'--innovation','-t',str(a.tree),'-i',str(a.counts),'--root-mean','.1' if '--root-family' in extra else '.443237','--estimate-root-mean','--gamma-cats',str(cats),'--estimate-epsilon','--max-count','180','--threads',str(a.threads),'--starts','1','--iterations',str(a.iterations),'--skip-boundary-fits','--likelihood-only','--initial-lambda','.016782','--initial-nu','.0004609','--initial-alpha','.068416','--initial-epsilon','.015966']+extra+['-o',str(prefix)]
+ if name.startswith('root01'):
+  cmd.remove('--estimate-root-mean');cmd[cmd.index('--root-mean')+1]='0'
  manifest={'command':cmd,'binary_sha256':hashlib.sha256(a.binary.read_bytes()).hexdigest(),'counts_sha256':hashlib.sha256(a.counts.read_bytes()).hexdigest(),'tree_sha256':hashlib.sha256(a.tree.read_bytes()).hexdigest()}
  if done.exists():
   old=json.loads(done.read_text())
