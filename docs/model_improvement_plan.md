@@ -1,6 +1,7 @@
 # N11 model-improvement experiment
 
-Status: in progress. Primary data: all 13,836 observed N11 families on the matching
+Status: screening and numerical checks completed; final comparison records the
+held-out and second-start results and the bootstrap gate decision. Primary data: all 13,836 observed N11 families on the matching
 15-species Vespidae dated tree. N0/17-species results remain an archived benchmark.
 No count-size, singleton or inferred-root filter will be applied.
 
@@ -18,6 +19,8 @@ No count-size, singleton or inferred-root filter will be applied.
    assumptions, not claims that an externally measured error rate is available.
 4. Compare the Poisson root with hurdle shifted-Poisson and hurdle shifted-NB
    roots. Estimate root-zero mass independently of positive ancestral counts.
+   Include the exact zero/one-root boundary (zero excess mean) so an optimizer
+   drifting toward that limit is not mistaken for a well-identified positive tail.
 5. Compare changes individually and jointly. Screen with multiple starts and
    whole-dataset predictive replicates. Require convergence, enlarged-cap checks
    and gamma-category stability. Use a reproducible family holdout for finalist

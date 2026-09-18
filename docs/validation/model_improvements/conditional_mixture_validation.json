@@ -1,0 +1,73 @@
+{
+  "independent_mixture_loglik_max_error": 2.6645352591003757e-15,
+  "gamma_multiplier_approximation_max_error": 4.80188355744815e-09,
+  "fixed_error_file_equivalence": "pass",
+  "mixture_observed_simulation": [
+    {
+      "pattern": [
+        0,
+        0,
+        1
+      ],
+      "expected": 0.07034461077525551,
+      "observed": 0.068225
+    },
+    {
+      "pattern": [
+        1,
+        1,
+        1
+      ],
+      "expected": 0.08939521776966895,
+      "observed": 0.088675
+    },
+    {
+      "pattern": [
+        1,
+        0,
+        0
+      ],
+      "expected": 0.04932066814291456,
+      "observed": 0.04945
+    },
+    {
+      "pattern": [
+        0,
+        1,
+        2
+      ],
+      "expected": 0.011356394709723135,
+      "observed": 0.01175
+    }
+  ],
+  "joint_recovery": [
+    {
+      "lambda": 0.19532212630310772,
+      "nu": 0.3085860710640141,
+      "alpha": 1.1510134270711585,
+      "epsilon": 0.07975481567278772,
+      "seed": 691
+    },
+    {
+      "lambda": 0.1928169890678572,
+      "nu": 0.3119191633250707,
+      "alpha": 1.432690904933208,
+      "epsilon": 0.08382246037548668,
+      "seed": 692
+    },
+    {
+      "lambda": 0.19931516402887275,
+      "nu": 0.32534424098470016,
+      "alpha": 1.2320505408955151,
+      "epsilon": 0.07880299902188678,
+      "seed": 693
+    }
+  ],
+  "joint_recovery_means": {
+    "lambda": 0.19581809313327922,
+    "nu": 0.3152831584579283,
+    "alpha": 1.2719182909666271,
+    "epsilon": 0.08079342502338706
+  },
+  "limitations": "Three joint-recovery replicates at one generating regime; not general identifiability or interval coverage."
+}

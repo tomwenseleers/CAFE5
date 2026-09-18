@@ -1,0 +1,8 @@
+{
+  "binary_sha256": "04ba209ab3d50ac0d5083511ffd868112f45d6fa551726b02524d5391237c42a",
+  "source_sha256": "ec4df7dcbbaec26412585c8a9e5ded4506e6cd5c5c0e64078438f8baae327b5f",
+  "purpose": "Exact conditional simulation validation; fitting binary remains frozen and separately hashed in fit manifests.",
+  "source_note": "Source subsequently changes only significance_status reporting; simulation and likelihood code unchanged.",
+  "current_source_sha256": "7235921d9ba62d26cfa695462f7851917b0745e6791151af921ed3cc08c649e5",
+  "installed_portable_binary_sha256": "da7a1bd6fdcb2b4ee09a3f97dc76ab7b6b63b38f18a5573e2e1463937dced247"
+}

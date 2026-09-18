@@ -1,0 +1,22 @@
+{
+  "root_to_tip_lengths": {
+    "Ancistrocerus_nigricornis": 110.0,
+    "Mischocyttarus_mexicanus": 110.0,
+    "Polistes_dominula": 110.0,
+    "Polistes_fuscatus": 110.0,
+    "Polistes_exclamans": 110.00000000099999,
+    "Polistes_canadensis": 110.00000000099999,
+    "Vespula_germanica": 110.0,
+    "Vespula_pensylvanica": 110.00000000300001,
+    "Vespula_vulgaris": 110.00000000300001,
+    "Vespa_crabro": 110.000000003,
+    "Vespa_mandarinia": 110.000000003,
+    "Vespa_velutina": 110.000000007,
+    "Dolichovespula_media": 110.000000007,
+    "Dolichovespula_saxonica": 110.000000008,
+    "Dolichovespula_sylvestris": 110.000000008
+  },
+  "range": 8.000000661922968e-09,
+  "mean": 110.00000000293333,
+  "implication": "On an exactly ultrametric tree, shared homogeneous transition and observation laws imply identical expected tip counts, even after conditioning on any observed tip being nonzero. Observed interspecies contrasts require either sampling variation, lineage effects, unequal observation laws or different ascertainment."
+}

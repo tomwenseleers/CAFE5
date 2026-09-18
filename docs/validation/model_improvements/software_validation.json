@@ -1,0 +1,8 @@
+{
+  "source_commit": "a928b32de6315abe0b56f41cc6edc43d164b5996",
+  "github_ci_run": 35329960533,
+  "github_ci_status": "success",
+  "legacy_tests": 206,
+  "legacy_assertions": 582,
+  "branch_analysis_status": "New parameterizations require matching bootstrap drivers; no new empirical branch p-values generated."
+}
