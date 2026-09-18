@@ -1,89 +1,159 @@
-# Evidence from a common-likelihood benchmark
+# How well does the extended model fit?
 
-The [frozen example](../examples/innovation_benchmark/) contains 13,742 observed
-families across 15 tips, with maximum observed count 145. All supplied families
-are fitted together. The snapshot includes a specified preliminary exclusion
-screen, but is **not certified TE-free**; this is a statistical/software example,
-not a biological result or annotation-enrichment analysis.
+On the example dataset, the birth–death–innovation model with gamma rate
+variation and count error fits substantially better than models restricted to
+equal duplication and loss rates with no innovation. The improvement remains
+large after AIC penalizes the additional fitted parameters.
 
-## What is being compared
+This page explains the comparison, how the number of gamma categories was
+chosen, and how we checked that numerical approximations did not determine the
+result. The [example data](../examples/innovation_benchmark/) contain 13,742
+observed gene families across 15 species. The largest observed count is 145
+copies in one species. **All 13,742 supplied families were fitted together.**
+Input sources and preparation are recorded in the example's
+[provenance file](../examples/innovation_benchmark/provenance.json).
 
-Every model below uses the **same count table, tree, root count one,
-observed-family conditioning and normalized likelihood implementation**:
+## Why extend the birth–death model?
 
-1. Critical base process: λ = μ, ν = 0, K = 1, tied error ε₀ = ε (p = 2).
-2. Critical gamma process: λ = μ, ν = 0, K = 13, tied error ε₀ = ε (p = 3).
-3. BDI/gamma/error: separate λ and μ, estimated ν, K = 13, separate estimated ε₀
-   and ε (p = 6).
+The original motivation was the zero-root problem. Duplication can increase the
+size of an existing family, but cannot create a copy of a family that is absent.
+Under a pure duplication–loss process, a family with zero copies at the root
+must therefore remain absent throughout the tree. Adding a copy-independent
+innovation rate allows gains from zero. With a root distribution that includes
+zero, families can originate after the root and still be analysed on the full
+tree.
 
-The first two impose the core evolutionary restrictions of CAFE5's base/gamma
-models. They are **not raw runs of the upstream CAFE objective**, which profiles
-root states and uses a different normalization. This controlled comparison
-isolates the benefit of the broader model under shared statistical assumptions;
-it does not prove that every possible legacy CAFE configuration will have worse
-predictive performance. See [the mathematical comparison](innovation_mathematics.md).
+The extension also allows duplication and loss to have different rates, families
+to evolve at different speeds, and observed counts to contain error. These
+features address different aspects of the data. The benchmark below evaluates
+their combined contribution; it does not attribute the entire improvement to
+innovation alone.
+
+For this particular comparison, **every model assumes one copy at the root**.
+This keeps the root assumption identical across models. It measures the benefit
+of the broader process and error model, including gains after extinction, but
+does not test reconstruction of a zero root. To allow root absence in an analysis,
+use `--root poisson`, as described in the [usage guide](innovation.md).
+
+## Comparing the models fairly
+
+We fitted three models to exactly the same count table and tree:
+
+1. **Equal-rate birth–death:** duplication and loss share one rate, innovation
+   is absent, and all families share the same evolutionary rate. One count-error
+   parameter is also estimated, giving two fitted parameters in total.
+2. **Equal-rate birth–death with gamma variation:** the same model, with a gamma
+   distribution allowing some families to evolve faster than others. Estimating
+   its shape adds one parameter, giving three in total.
+3. **Birth–death–innovation with gamma variation and count error:** duplication,
+   loss and innovation have separate rates. The model also estimates the gamma
+   shape and separate error parameters for zero and positive true counts,
+   giving six fitted parameters in total.
+
+The first two models use the core evolutionary assumptions of CAFE5's base and
+gamma models. We fitted them within this extension so that all three use the
+same root assumption and the same likelihood calculation, including conditioning
+on families being observed in at least one species. They are not runs of the
+unmodified CAFE5 executable: its treatment of root states and likelihood
+normalization differs. The [mathematical comparison](innovation_mathematics.md)
+explains those differences.
+
+AIC combines goodness of fit with a penalty for estimating more parameters:
+
+$$
+\mathrm{AIC}=2\,\mathrm{NLL}+2p,
+$$
+
+where NLL is the negative log likelihood and *p* is the number of fitted
+parameters. Lower AIC is better. ΔAIC is the difference from the best model in
+the table.
 
 | Model | Fitted parameters | NLL | AIC | ΔAIC |
 |---|---:|---:|---:|---:|
-| Critical base | 2 | 117707.021 | 235418.041 | 50895.080 |
-| Critical gamma | 3 | 95606.972 | 191219.945 | 6696.983 |
-| BDI gamma error | 6 | 92255.481 | 184522.961 | 0.000 |
+| Equal-rate birth–death | 2 | 117707.021 | 235418.041 | 50895.080 |
+| Equal-rate birth–death with gamma variation | 3 | 95606.972 | 191219.945 | 6696.983 |
+| Birth–death–innovation with gamma variation and count error | 6 | 92255.481 | 184522.961 | 0.000 |
 
-The BDI extension improves AIC by 6697.0 relative to the matched critical gamma model despite estimating three additional parameters. The critical gamma fit uses a cap of 360; the other fits use 180. Cap differences are recorded in the [machine-readable table](validation/release/comparison.tsv).
+Allowing gamma rate variation greatly improves the fit of the equal-rate model.
+The full extension improves AIC by a further **6,696.983**, even after the penalty
+for its three additional parameters. This is strong relative support for the
+extended model among these candidates on this dataset. It does not establish
+that the same model will be preferred for every dataset, or identify which
+individual addition explains most of the gain.
 
+## Choosing the number of gamma categories
 
-The comparison uses AIC = 2 NLL + 2p, including every fitted rate/error parameter.
-AIC assesses relative in-sample support among these candidates. The improvement
-belongs to the combined extension; it cannot all be attributed to innovation
-without additional matched ablation fits. Optimization uses multiple starts and
-numerical checks, but is not a proof of finding a global optimum.
+The gamma distribution describes continuous variation in evolutionary rates
+among families. Computation approximates that distribution using *K* rate
+categories. These categories are determined by a single fitted shape parameter;
+they are not *K* independently estimated rates.
 
-## Gamma resolution
+The following table shows the verified category-refinement fits for the
+six-parameter model:
 
-For the six-parameter root-one BDI/gamma/error model:
-
-| Categories K | AIC | ΔAIC |
+| Gamma categories K | AIC | ΔAIC |
 |---:|---:|---:|
 | 11 | 184531.711 | 8.750 |
 | 12 | 184525.314 | 2.353 |
-| 13 | 184522.961 | 0 |
+| 13 | 184522.961 | 0.000 |
 | 14 | 184523.439 | 0.478 |
 | 16 | 184527.050 | 4.089 |
 
-K=13 was selected from these verified candidates. K=14 is almost equally
-supported; the result should not be described as strong evidence for exactly
-13 biological classes. K changes the discrete-gamma approximation, while p stays
-six. This is a selected, documented preset, not a universal optimum across
-family definitions, trees or root laws.
+We selected **13 categories**, which gave the lowest AIC among these verified
+fits. Fourteen categories gave almost the same result. This supports using 13
+as a practical numerical approximation here, rather than interpreting the data
+as evidence for exactly 13 biological classes of families. All rows estimate
+six parameters, so their AIC differences reflect differences in fit. The best
+category count should be checked again for a new dataset.
 
-The selected rates are λ = 0.01893405, μ = 0.03325355, ν = 0.00026007,
-α = 0.17720017, ε = 0.01045103 and ε₀ = 0.05291919, in the supplied tree's time
-units. The loss rate is approximately 1.76 times the duplication rate.
+The selected fit estimates duplication λ = 0.01893405, loss μ = 0.03325355,
+innovation ν = 0.00026007, gamma shape α = 0.17720017, positive-count error
+ε = 0.01045103, and zero-count error ε₀ = 0.05291919. The evolutionary rates
+are expressed per unit of time in the supplied tree; the gamma shape and error
+parameters are dimensionless. The fitted loss rate is approximately 1.76 times
+the duplication rate.
 
-## Numerical and scientific rationale
+## Keeping large families in the analysis
 
-The extension permits innovation when the ancestral count is zero, including
-reappearance after extinction. A Poisson-root analysis also permits absence at
-the root; the root-one benchmark itself does not demonstrate root-zero inference.
-All count sizes remain in a common likelihood and bootstrap. Adaptive latent
-caps and explicit convergence checks replace exclusion based merely on size.
-Original CAFE can also process large families; this fork does not claim that
-large-family analysis is categorically impossible upstream. Its contribution is
-an explicit retention and numerical-validation workflow alongside the broader
-process and observation model.
+Large families and large changes in copy number can make likelihood calculations
+numerically difficult. The workflow keeps these families in the analysis and
+increases the range of possible ancestral counts used in the calculation when
+needed. It then checks whether increasing that range further changes the
+likelihood appreciably. Small and large families contribute to the same fitted
+model and bootstrap analysis.
 
-Rare-inclusion and broad-tail normalizations have independent analytic checks.
-The selected model's likelihood is reproduced by the release binary, and its
-cap-doubling difference is zero at reported precision. All accepted benchmark
-fits must pass the same absolute NLL-difference tolerance of 0.01.
+The upper numerical count limit is called the **cap**. It is a computational
+setting, not a threshold for removing observed families. In this benchmark,
+the equal-rate gamma model required a cap of 360; the other two models used 180.
+Each accepted fit had to change its total NLL by less than 0.01 when the cap was
+doubled. The equal-rate gamma fit changed by approximately 0.000290, and the
+selected model changed by zero at the reported precision. These numerical
+differences are much smaller than the differences between the fitted models.
 
-Good relative fit does not establish absolute predictive adequacy, correct
-annotation, or calibrated false-positive rates under model misspecification.
-HOG ascertainment, species-specific annotation differences and model-selection
-uncertainty remain limitations. The nominal bootstrap tests retain these model
-assumptions; no FDR adjustment is applied.
+The workflow also uses multiple optimization starts and independent checks of
+likelihood normalization. The selected likelihood was reproduced with the
+release binary. These checks provide evidence that the reported improvement is
+not an artefact of the count limit, although multiple starts cannot prove that
+a global optimum has been found. Available memory, runtime and the workflow's
+maximum cap still limit the sizes of problems that can be analysed.
 
-## Reproduce
+## What the benchmark establishes
+
+The results support the combined extension over the two simpler models under
+shared assumptions on this dataset. Establishing how much each feature
+contributes would require further comparisons that remove one feature at a
+time. Testing performance on independent datasets and simulated data addresses
+a different question from comparing AIC on this example.
+
+A lower AIC also does not by itself establish the accuracy of family or branch
+p values. Those are calculated using the separate
+[refitted-bootstrap procedure](focal_bootstrap_methods.md), and depend on the
+fitted model adequately representing the data. They are nominal p values;
+no FDR adjustment is applied.
+
+## Reproduce the comparison
+
+Run this command from the repository root after building the executable:
 
 ```bash
 python3 scripts/innovation/benchmark_models.py build/cafe5 \
@@ -91,14 +161,18 @@ python3 scripts/innovation/benchmark_models.py build/cafe5 \
   examples/innovation_benchmark/tree.nwk -o benchmark --threads 4
 ```
 
-This refits the three candidates, enlarging failed numerical caps and writing
-commands, fit diagnostics and `comparison.tsv`. It can take substantial time.
-For the selected-model workflow and bootstrap, use [the two-input interface](innovation.md).
-The machine-readable [release evidence](validation/release/) includes AIC and
-gamma-resolution tables, parameter score replay and independent numerical checks.
-The fixed-parameter replay is a score verification, not an additional parameter
-fit; its estimated-parameter flags should not be used to count the six parameters
-of the original fitted model.
+This refits the three models in the first table. It increases numerical caps
+when checks fail and saves the commands, diagnostics and `comparison.tsv`.
+The full comparison can take substantial time. To explore gamma category counts
+and then bootstrap a selected model, follow the [usage guide](innovation.md).
+
+The saved [release evidence](validation/release/) includes the
+[model comparison](validation/release/comparison.tsv),
+[gamma category comparison](validation/release/gamma_resolution.tsv), and
+independent numerical checks. It also includes a fixed-parameter calculation
+that reproduces the selected likelihood. That calculation verifies a previous
+fit; it does not re-estimate parameters or change the original model's
+six-parameter AIC penalty.
 
 To verify the AIC arithmetic in R:
 
