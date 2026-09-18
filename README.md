@@ -13,6 +13,10 @@ includes 24 whole-dataset bootstrap refits, nominal 0.01/0.05 branch comparisons
 and N11 diagnostics. Substantial predictive mismatch prevents treating these
 experimental results as validated replacement biological conclusions.
 
+The [N11 improvement experiment](docs/model_improvement_plan.md) compares
+[optional unequal rates, hurdle roots and separate zero-to-one error](docs/model_improvement_methods.md).
+These models require their own predictive validation before branch inference.
+
 # CAFE
 
 <div>

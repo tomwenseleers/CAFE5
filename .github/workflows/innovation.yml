@@ -25,3 +25,7 @@ jobs:
         run: python3 scripts/innovation/validate_root_fit.py build/cafe5 validation/root_fit
       - name: Transition-score and one-percent null check
         run: python3 scripts/innovation/validate_transition_bootstrap.py build/cafe5 validation/transition_bootstrap
+      - name: Asymmetric rates, hurdle roots and separate zero-error validation
+        run: python3 scripts/innovation/validate_improvements.py build/cafe5 validation/improvements
+      - name: Conditional recovery of added model parameters
+        run: python3 scripts/innovation/validate_improvement_recovery.py build/cafe5 validation/improvement_recovery

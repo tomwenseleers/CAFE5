@@ -9,6 +9,7 @@ p=argparse.ArgumentParser();p.add_argument('--tree',type=Path,required=True);p.a
 def read(path):
  with path.open() as f:return list(csv.DictReader(f,delimiter='\t'))
 r={x['parameter']:x['value'] for x in read(Path(str(a.fit)+'_results.tsv'))};K=int(r['max_count']);n=K+1;lam,nu,eps,mean=[float(r[k]) for k in ['lambda','nu','epsilon','root_mean']]
+if r.get('model')!='BDI_equal_birth_death' or r.get('root_family','poisson')!='poisson' or r.get('epsilon_zero_separate','0')=='1':raise ValueError('This independent posterior check supports the original equal-rate Poisson-root model only')
 categories=read(Path(str(a.fit)+'_categories.tsv'));rates=[float(x['lambda_multiplier']) for x in categories];wanted=set(a.hog_list.read_text().split());counts={x['Family ID']:x for x in read(a.counts) if x['Family ID'] in wanted};family={x['Family ID']:x for x in read(Path(str(a.fit)+'_families.tsv')) if x['Family ID'] in wanted}
 tokens=re.findall(r'[(),:;]|[^(),:;\s]+',a.tree.read_text());pos=0;nodes=[]
 def parse(parent=-1):

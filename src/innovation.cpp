@@ -62,10 +62,56 @@ std::vector<double> transition(int maximum, double lambda, double nu, double tim
     return a;
 }
 
+// One-ancestor linear birth/death PGF: p0 + survival*a*z/(1-q*z).
+// Stable on both sides of the critical lambda=mu limit.
+struct BDCoefficients {double p0,survival,q,a,log_a;};
+static BDCoefficients bd_coefficients(double l,double m,double t) {
+    double r=l-m,z=r*t;
+    if(r==0) {double x=l*t,a=1/(1+x);return {x*a,a,x*a,a,-std::log1p(x)};}
+    if(std::abs(z)<.5) {
+        // Preserve log(1-q)/lambda when both per-copy rates are tiny but
+        // innovation is not gamma-scaled. Subtracting two logs loses this limit.
+        double h=std::expm1(z)/r,d=1+l*h;
+        return {m*h/d,std::exp(z)/d,l*h/d,1/d,-std::log1p(l*h)};
+    }
+    if(z>=0) {
+        double h=-std::expm1(-z)/r,d=std::exp(-z)+l*h;
+        return {m*h/d,1/d,l*h/d,std::exp(-z)/d,-z-std::log(d)};
+    }
+    double h=std::expm1(z)/r,d=1+l*h;
+    return {m*h/d,std::exp(z)/d,l*h/d,1/d,-std::log1p(l*h)};
+}
+std::vector<double> transition_asymmetric(int maximum,double l,double m,double nu,double t) {
+    if(maximum<0||l<0||m<0||nu<0||t<0||!std::isfinite(l)||!std::isfinite(m)||
+       !std::isfinite(nu)||!std::isfinite(t)||!std::isfinite((l+m+nu)*t))
+        throw std::runtime_error("Invalid asymmetric BDI transition argument");
+    if(l==m)return transition(maximum,l,nu,t);
+    int size=maximum+1;Vec matrix(size_t(size)*size,0);
+    BDCoefficients c=bd_coefficients(l,m,t);
+    double immigration_mean=l==0?nu*(m==0?t:-std::expm1(-m*t)/m):0;
+    double lp=l==0?-immigration_mean:(nu==0?0:nu*(c.log_a/l));
+    matrix[0]=std::exp(lp);
+    for(int j=1;j<size;++j) {
+        double numerator=l==0?immigration_mean:nu*(c.q/l)+(j-1)*c.q;
+        lp+=(numerator>0?std::log(numerator):-INF)-std::log(double(j));matrix[j]=std::exp(lp);
+    }
+    for(int i=1;i<size;++i) {
+        double sum=0;
+        for(int j=0;j<size;++j) {
+            if(j)sum=matrix[size_t(i-1)*size+j-1]+c.q*sum;
+            matrix[size_t(i)*size+j]=c.p0*matrix[size_t(i-1)*size+j]+c.survival*c.a*sum;
+        }
+    }
+    return matrix;
+}
+
 struct Options {
     std::string tree,input,prefix="innovation",root_file,matrix_file,error_file;
     double lambda=-1,nu=-1,root_mean=-1,matrix_time=-1,alpha=-1,epsilon=0;
     double initial_lambda=-1,initial_nu=-1,initial_alpha=-1,initial_epsilon=-1;
+    double mu=-1,initial_mu=-1,epsilon_zero=-1,root_zero=.2,root_shape=1;
+    bool estimate_mu=false,estimate_epsilon_zero=false,estimate_root_zero=false,estimate_root_shape=false;
+    std::string root_family="poisson";
     int categories=1; bool estimate_epsilon=false,epsilon_set=false;
     int maximum=80,iterations=400,starts=3,simulate=0,bootstrap=0,threads=1;
     unsigned seed=20260917;
@@ -91,10 +137,29 @@ static std::ofstream output(const std::string& path) {
     std::ofstream f(path); if(!f) throw std::runtime_error("Cannot write "+path);
     f<<std::setprecision(17); return f;
 }
+static Vec root_probabilities(int size,const Options& o,double mean,double zero,double shape) {
+    Vec p(size,0);
+    if(mean<0||!std::isfinite(mean)||zero<0||zero>=1||!std::isfinite(zero)||shape<=0||!std::isfinite(shape))return p;
+    if(o.root_family=="poisson") {
+        for(int n=0;n<size;++n)p[n]=mean==0?(n==0):std::exp(-mean+n*std::log(mean)-std::lgamma(n+1.));
+    } else {
+        p[0]=zero;
+        for(int n=1;n<size;++n) {
+            int k=n-1;double lp;
+            if(mean==0)lp=k==0?0:-INF;
+            else if(o.root_family=="hurdle-poisson")lp=-mean+k*std::log(mean)-std::lgamma(k+1.);
+            else lp=std::lgamma(k+shape)-std::lgamma(shape)-std::lgamma(k+1.)
+                    -shape*std::log1p(mean/shape)+k*(std::log(mean)-std::log(shape+mean));
+            p[n]=(1-zero)*std::exp(lp);
+        }
+    }
+    return p;
+}
 // Observation law: P(observed count | true count). At zero, negative counts
 // have exactly zero mass; omitted fixed-file rows repeat the preceding row.
 struct ErrorLaw {
-    double epsilon=0;
+    double epsilon=0,epsilon_zero=-1;
+    double zero_error() const {return epsilon_zero<0?epsilon:epsilon_zero;}
     std::vector<int> deltas{-1,0,1};
     std::map<int,Vec> rows;
     explicit ErrorLaw(const std::string& path="") {
@@ -125,13 +190,14 @@ struct ErrorLaw {
             if(n+deltas[j]<0 && row[j]>0) throw std::runtime_error("Error model assigns mass to negative observed counts");}
     }
     Vec probabilities(int truth) const {
-        if(rows.empty()) return truth==0?Vec{0,1-epsilon,epsilon}:Vec{epsilon,1-2*epsilon,epsilon};
+        if(rows.empty()) return truth==0?Vec{0,1-zero_error(),zero_error()}:Vec{epsilon,1-2*epsilon,epsilon};
         auto it=rows.upper_bound(truth);--it;return it->second;
     }
     double emission(int observed,int truth) const {
         if(rows.empty()) {
-            if(observed==truth)return truth==0?1-epsilon:1-2*epsilon;
-            if(observed==truth+1||(truth>0&&observed==truth-1))return epsilon;
+            if(observed==truth)return truth==0?1-zero_error():1-2*epsilon;
+            if(observed==truth+1)return truth==0?zero_error():epsilon;
+            if(truth>0&&observed==truth-1)return epsilon;
             return 0;
         }
         Vec row=probabilities(truth);
@@ -139,7 +205,7 @@ struct ErrorLaw {
         return 0;
     }
     int sample(int truth,std::mt19937& rng) const {
-        if(rows.empty()&&epsilon==0)return truth;
+        if(rows.empty()&&epsilon==0&&zero_error()==0)return truth;
         Vec row=probabilities(truth);int j=std::discrete_distribution<int>(row.begin(),row.end())(rng);
         return truth+deltas[j];
     }
@@ -163,7 +229,7 @@ struct Engine {
     ErrorLaw error;
     std::map<double,Vec> matrices;
     int s;
-    double lambda,nu,prior_tail=0;
+    double lambda,mu,nu,prior_tail=0;
     bool conditioned;
     Engine(const Options& o):error(o.error_file),s(o.maximum+1),conditioned(!o.unconditioned) {
         std::ifstream f(o.tree); std::string nw; std::getline(f,nw);
@@ -193,7 +259,7 @@ struct Engine {
             if(!r.eof()) throw std::runtime_error("Malformed root distribution; expected count probability pairs, no header");
         } else {
             if(o.root_mean<0) throw std::runtime_error("Specify --root-mean or --root-prior explicitly");
-            for(int k=0;k<s;++k) prior[k]=o.root_mean==0?(k==0):std::exp(-o.root_mean+k*std::log(o.root_mean)-std::lgamma(k+1.));
+            prior=root_probabilities(s,o,o.root_mean,o.root_zero,o.root_shape);
             prior_tail=std::max(0.,1-std::accumulate(prior.begin(),prior.end(),0.));
             if(prior_tail>1e-8) throw std::runtime_error("Root prior tail exceeds 1e-8; increase --max-count");
         }
@@ -246,16 +312,16 @@ struct Engine {
         }
     }
     double leaf_message(const Vec& a,int y,int parent) const {
-        if(error.rows.empty()&&error.epsilon==0)return a[size_t(parent)*s+y];
+        if(error.rows.empty()&&error.epsilon==0&&error.zero_error()==0)return a[size_t(parent)*s+y];
         double sum=0;
         for(int d:error.deltas) {int truth=y-d;if(truth>=0&&truth<s)
             sum+=a[size_t(parent)*s+truth]*error.emission(y,truth);}
         return sum;
     }
-    void set_rates(double l,double n) {
-        lambda=l; nu=n; matrices.clear();
+    void set_rates(double l,double n,double m=-1) {
+        lambda=l; mu=m<0?l:m; nu=n; matrices.clear();
         for(size_t i=1;i<nodes.size();++i) if(!matrices.count(nodes[i].time))
-            matrices.emplace(nodes[i].time,transition(s-1,l,n,nodes[i].time));
+            matrices.emplace(nodes[i].time,transition_asymmetric(s-1,l,mu,n,nodes[i].time));
     }
     // Scaled pruning: one unit-likelihood vector per node, accumulating log scales.
     double prune(const std::vector<int>& y,std::vector<Vec>* keep=nullptr) const {
@@ -290,9 +356,9 @@ struct Engine {
         if(logzero>=0) return -INF;
         return std::log(-std::expm1(logzero));
     }
-    double nll(double l,double n) {
+    double nll(double l,double n,double m=-1) {
         if(l<0||n<0||!std::isfinite(l)||!std::isfinite(n)) return INF;
-        set_rates(l,n); double inc=inclusion_log();
+        set_rates(l,n,m); double inc=inclusion_log();
         if(!std::isfinite(inc)) return INF;
         std::vector<std::vector<Vec>> messages(nodes.size());
         std::vector<Vec> scales(nodes.size());
@@ -383,15 +449,21 @@ struct Engine {
         for(int attempt=0;attempt<1000000;++attempt) {
             std::vector<int> values(nodes.size()),y(taxa.size()); values[0]=root(rng);
             for(size_t i=1;i<nodes.size();++i) {
-                double t=nodes[i].time,x=lambda*t; int parent=values[nodes[i].parent];
-                long long value=parent;
-                if(lambda>0 && t>0) {
-                    int survivors=std::binomial_distribution<int>(parent,1/(1+x))(rng);
-                    value=survivors;
-                    if(survivors) value+=std::poisson_distribution<int>(std::gamma_distribution<double>(survivors,x)(rng))(rng);
-                    if(nu>0) value+=std::poisson_distribution<int>(std::gamma_distribution<double>(nu/lambda,x)(rng))(rng);
-                } else if(nu*t>0) value+=std::poisson_distribution<int>(nu*t)(rng);
-                if(value>100000000) throw std::runtime_error("Simulation count overflow");
+                double t=nodes[i].time;int parent=values[nodes[i].parent];
+                auto c=bd_coefficients(lambda,mu,t);
+                int survivors=std::binomial_distribution<int>(parent,std::min(1.,std::max(0.,c.survival)))(rng);
+                long long value=survivors;
+                auto poisson_sample=[&](double mean)->int {
+                    if(!std::isfinite(mean)||mean>1e8||mean<0)throw std::runtime_error("Simulation intensity overflow");
+                    return mean==0?0:std::poisson_distribution<int>(mean)(rng);
+                };
+                if(lambda>0&&t>0) {
+                    double scale=c.q/c.a;
+                    if(!std::isfinite(scale))throw std::runtime_error("Simulation geometric scale overflow");
+                    if(scale>0&&survivors)value+=poisson_sample(std::gamma_distribution<double>(survivors,scale)(rng));
+                    if(scale>0&&nu>0)value+=poisson_sample(std::gamma_distribution<double>(nu/lambda,scale)(rng));
+                } else if(nu>0) value+=poisson_sample(nu*(mu==0?t:-std::expm1(-mu*t)/mu));
+                if(value>100000000)throw std::runtime_error("Simulation count overflow");
                 values[i]=int(value);
             }
             for(size_t i=0;i<nodes.size();++i) if(nodes[i].leaf>=0) y[nodes[i].leaf]=error.sample(values[i],rng);
@@ -417,17 +489,16 @@ struct Model:Engine {
     }
     Engine* component(size_t k) {return k?extra[k-1].get():static_cast<Engine*>(this);}
     const Engine* component(size_t k) const {return k?extra[k-1].get():static_cast<const Engine*>(this);}
-    bool set_root_mean(double mean) {
+    bool set_root(double mean,double zero,double root_shape) {
         if(mean<0||!std::isfinite(mean)) return false;
-        Vec probabilities(s);
-        for(int k=0;k<s;++k) probabilities[k]=mean==0?(k==0):std::exp(-mean+k*std::log(mean)-std::lgamma(k+1.));
+        Vec probabilities=root_probabilities(s,options,mean,zero,root_shape);
         double mass=std::accumulate(probabilities.begin(),probabilities.end(),0.);
-        if(mass<=0||1-mass>1e-8) return false;
+        if(!std::isfinite(mass)||mass<=0||1-mass>1e-8) return false;
         for(double& p:probabilities) p/=mass;
         for(size_t k=0;k<rates.size();++k) {component(k)->prior=probabilities;component(k)->prior_tail=std::max(0.,1-mass);}
         return true;
     }
-    void set_rates(double l,double n,double a=1,double e=0) {
+    void set_rates(double l,double n,double a=1,double e=0,double m=-1,double e0=-1) {
         shape=a;eps=e;
         if(rates.size()>1) {
             if(a<.05||a>100) throw std::runtime_error("Gamma shape outside supported interval [0.05,100]");
@@ -435,8 +506,8 @@ struct Model:Engine {
         }
         for(size_t k=0;k<rates.size();++k) {
             if(!std::isfinite(rates[k])||rates[k]<=0) throw std::runtime_error("Invalid discrete gamma category");
-            component(k)->error.epsilon=e;
-            component(k)->set_rates(l*rates[k],n);
+            component(k)->error.epsilon=e;component(k)->error.epsilon_zero=e0;
+            component(k)->set_rates(l*rates[k],n,(m<0?l:m)*rates[k]);
         }
     }
     Vec category_logs(const std::vector<int>& y) const {
@@ -449,12 +520,12 @@ struct Model:Engine {
         double z=prune(std::vector<int>(taxa.size(),0));
         return z<0?std::log(-std::expm1(z)):-INF;
     }
-    double nll(double l,double n,double a=1,double e=0) {
+    double nll(double l,double n,double a=1,double e=0,double m=-1,double e0=-1) {
         if(l<0||n<0||e<0||e>=.5||!std::isfinite(l)||!std::isfinite(n)||!std::isfinite(a)||!std::isfinite(e)||
             (rates.size()>1&&(a<.05||a>100))) return INF;
-        set_rates(l,n,a,e);
-        size_t active=l==0?1:rates.size();
-        for(size_t k=0;k<active;++k) component(k)->nll(l*rates[k],n);
+        set_rates(l,n,a,e,m,e0);
+        size_t active=l==0&&(m<0||m==0)?1:rates.size();
+        for(size_t k=0;k<active;++k) component(k)->nll(l*rates[k],n,(m<0?l:m)*rates[k]);
         double inc;
         if(active==1) {double z=Engine::prune(std::vector<int>(taxa.size(),0));inc=observed_condition?(z<0?std::log(-std::expm1(z)):-INF):0;}
         else inc=inclusion_log();
@@ -489,41 +560,50 @@ struct Model:Engine {
         throw std::runtime_error("Observed-mixture simulation exhausted attempts");
     }
 };
-struct Fit {double l,n,a,e,score;bool converged;int iterations;double root_mean;};
+struct Fit {double l,n,a,e,score;bool converged;int iterations;double root_mean;double mu=-1,e0=-1,root_zero=.2,root_shape=1;};
 struct Scorer:optimizer_scorer {
-    Model& model;Options options;double fixed_l,fixed_n,fixed_e;Vec start;
-    Scorer(Model& m,const Options& o,double l,double n,double e,Vec v):model(m),options(o),fixed_l(l),fixed_n(n),fixed_e(e),start(v) {}
+    Model& model;Options options;double fixed_l,fixed_n,fixed_e,fixed_m;Vec start;
+    Scorer(Model& m,const Options& o,double l,double n,double e,double mu,Vec v):model(m),options(o),fixed_l(l),fixed_n(n),fixed_e(e),fixed_m(mu),start(v) {}
     Vec initial_guesses() override {return start;}
     Fit decode(const double* x) const {
         int k=0;Fit f;f.l=fixed_l<0?std::exp(x[k++]):fixed_l;f.n=fixed_n<0?std::exp(x[k++]):fixed_n;
-        f.a=options.categories==1?1:(options.alpha>=0?options.alpha:(fixed_l==0?1:std::exp(x[k++])));
+        f.mu=options.estimate_mu&&fixed_m<0?std::exp(x[k++]):fixed_m;
+        f.a=options.categories==1?1:(options.alpha>=0?options.alpha:((fixed_l==0&&(fixed_m==0||(!options.estimate_mu&&fixed_m<0)))?1:std::exp(x[k++])));
         f.e=fixed_e<0?.5/(1+std::exp(-x[k++])):fixed_e;
-        f.root_mean=options.estimate_root_mean?std::exp(x[k++]):options.root_mean;return f;
+        f.root_mean=options.estimate_root_mean?std::exp(x[k++]):options.root_mean;
+        f.e0=options.estimate_epsilon_zero?1/(1+std::exp(-x[k++])):options.epsilon_zero;
+        f.root_zero=options.estimate_root_zero?1/(1+std::exp(-x[k++])):options.root_zero;
+        f.root_shape=options.estimate_root_shape?std::exp(x[k++]):options.root_shape;return f;
     }
     double calculate_score(const double* x) override {
-        Fit f=decode(x);if(f.l>1e4||f.n>1e4)return INF;
-        if(options.estimate_root_mean&&!model.set_root_mean(f.root_mean))return INF;
-        return model.nll(f.l,f.n,f.a,f.e);
+        Fit f=decode(x);if(f.l>1e4||f.n>1e4||f.mu>1e4||!std::isfinite(f.mu)||f.e0>=1)return INF;
+        if(options.root_file.empty()&&!model.set_root(f.root_mean,f.root_zero,f.root_shape))return INF;
+        return model.nll(f.l,f.n,f.a,f.e,f.mu,f.e0);
     }
 };
 static Fit fit(Model& e,const Options& o,std::ostream& trace) {
-    Fit best{0,0,1,0,INF,false,0,o.root_mean};
+    Fit best;best.score=INF;best.root_mean=o.root_mean;
     std::vector<std::pair<double,double>> faces{{o.lambda,o.nu}};
     if(o.boundary_fits&&o.lambda<0)faces.push_back({0,o.nu});
     if(o.boundary_fits&&o.nu<0)faces.push_back({o.lambda,0});
     if(o.boundary_fits&&o.lambda<0&&o.nu<0)faces.push_back({0,0});
     Vec error_faces{o.estimate_epsilon?-1:o.epsilon};if(o.boundary_fits&&o.estimate_epsilon)error_faces.push_back(0);
+    Vec mu_faces{o.estimate_mu?-1:o.mu};if(o.boundary_fits&&o.estimate_mu)mu_faces.push_back(0);
     double height=1;for(const auto& node:e.nodes)height=std::max(height,node.time);
-    trace<<"face_lambda\tface_nu\tface_epsilon\tstart\tlambda\tnu\talpha\tepsilon\tnll\titerations\tconverged\troot_mean\n";
-    for(auto face:faces)for(double ef:error_faces)for(int attempt=0;attempt<o.starts;++attempt) {
+    trace<<"face_lambda\tface_nu\tface_epsilon\tstart\tlambda\tnu\talpha\tepsilon\tnll\titerations\tconverged\troot_mean\tmu\tepsilon_zero\troot_zero\troot_shape\n";
+    for(auto face:faces)for(double ef:error_faces)for(double mf:mu_faces)for(int attempt=0;attempt<o.starts;++attempt) {
         Vec initial;
         if(face.first<0)initial.push_back(std::log(attempt==0&&o.initial_lambda>0?o.initial_lambda:(.1/height)*std::pow(5.,attempt-1)));
         if(face.second<0)initial.push_back(std::log(attempt==0&&o.initial_nu>0?o.initial_nu:(.1/height)*std::pow(3.,attempt-1)));
-        if(o.categories>1&&o.alpha<0&&face.first!=0)initial.push_back(std::log(attempt==0&&o.initial_alpha>0?o.initial_alpha:std::pow(2.,attempt)));
+        if(o.estimate_mu&&mf<0)initial.push_back(std::log(o.initial_mu>0?o.initial_mu:(.1/height)*std::pow(5.,attempt-1)));
+        if(o.categories>1&&o.alpha<0&&!(face.first==0&&(mf==0||(!o.estimate_mu&&mf<0))))initial.push_back(std::log(attempt==0&&o.initial_alpha>0?o.initial_alpha:std::pow(2.,attempt)));
         if(ef<0){double guess=attempt==0&&o.initial_epsilon>0?o.initial_epsilon:.02*std::pow(2.,attempt);guess=std::min(.2,guess);initial.push_back(std::log(guess/(.5-guess)));}
         if(o.estimate_root_mean)initial.push_back(std::log(std::max(.01,o.root_mean)*std::pow(2.,attempt)));
-        Scorer scorer(e,o,face.first,face.second,ef,initial);Fit f=scorer.decode(initial.data());f.iterations=0;
-        if(initial.empty()){if(attempt)continue;f.score=e.nll(f.l,f.n,f.a,f.e);f.converged=std::isfinite(f.score);}
+        if(o.estimate_epsilon_zero){double guess=o.epsilon_zero>0?o.epsilon_zero:.001;initial.push_back(std::log(guess/(1-guess)));}
+        if(o.estimate_root_zero)initial.push_back(std::log(o.root_zero/(1-o.root_zero)));
+        if(o.estimate_root_shape)initial.push_back(std::log(o.root_shape));
+        Scorer scorer(e,o,face.first,face.second,ef,mf,initial);Fit f=scorer.decode(initial.data());f.iterations=0;
+        if(initial.empty()){if(attempt)continue;f.score=e.nll(f.l,f.n,f.a,f.e,f.mu,f.e0);f.converged=std::isfinite(f.score);}
         else {
             for(int retry=0;retry<12&&!std::isfinite(scorer.calculate_score(initial.data()));++retry) {
                 int k=0;if(face.first<0)initial[k++]+=1;if(face.second<0)initial[k++]+=1;
@@ -534,7 +614,7 @@ static Fit fit(Model& e,const Options& o,std::ostream& trace) {
             fminsearch_min(search,initial.data());candidate* c=get_best_result(search);f=scorer.decode(c->values.data());
             f.score=c->score;f.iterations=search->iters;f.converged=std::isfinite(c->score)&&search->iters<o.iterations;fminsearch_free(search);
         }
-        trace<<face.first<<'\t'<<face.second<<'\t'<<ef<<'\t'<<attempt<<'\t'<<f.l<<'\t'<<f.n<<'\t'<<f.a<<'\t'<<f.e<<'\t'<<f.score<<'\t'<<f.iterations<<'\t'<<f.converged<<'\t'<<f.root_mean<<std::endl;
+        trace<<face.first<<'\t'<<face.second<<'\t'<<ef<<'\t'<<attempt<<'\t'<<f.l<<'\t'<<f.n<<'\t'<<f.a<<'\t'<<f.e<<'\t'<<f.score<<'\t'<<f.iterations<<'\t'<<f.converged<<'\t'<<f.root_mean<<'\t'<<(f.mu<0?f.l:f.mu)<<'\t'<<f.e0<<'\t'<<f.root_zero<<'\t'<<f.root_shape<<std::endl;
         std::cerr<<"BDI fit: lambda="<<f.l<<" nu="<<f.n<<" alpha="<<f.a<<" epsilon="<<f.e<<" nll="<<f.score<<" converged="<<f.converged<<'\n';
         if(f.score<best.score)best=f;
     }
@@ -546,6 +626,11 @@ static void usage() {
       "cafe5 --innovation -t TREE -i COUNTS --root-mean M -o PREFIX [options]\n"
       "Required root law: --root-mean M (Poisson) OR --root-prior FILE (count probability)\n"
       "--lambda L / --nu N: fix a nonnegative rate; omitted rates are estimated\n"
+      "--mu M OR --estimate-mu: separate loss rate; default equals lambda\n"
+      "--initial-mu M: first loss-rate optimizer start\n"
+      "--epsilon-zero E OR --estimate-epsilon-zero: separate zero-to-one error (E supplies an initial value if estimated)\n"
+      "--root-family poisson|hurdle-poisson|hurdle-nb; hurdle root-mean is mean excess above one\n"
+      "--root-zero P / --root-shape K; --estimate-root-zero / --estimate-root-shape\n"
       "--max-count K (80), --iterations N (400), --starts N (3), --threads N (1)\n"
       "--simulate N --lambda L --nu N: generate observed-family table\n"
       "--likelihood-only: skip family and ancestral output (e.g. likelihood profiles)\n"
@@ -571,6 +656,10 @@ int run(int argc,char *const argv[]) {
             if(a=="--estimate-epsilon") {o.estimate_epsilon=true;continue;}
             if(a=="--likelihood-only") {o.likelihood_only=true;continue;}
             if(a=="--skip-boundary-fits") {o.boundary_fits=false;continue;}
+            if(a=="--estimate-mu") {o.estimate_mu=true;continue;}
+            if(a=="--estimate-epsilon-zero") {o.estimate_epsilon_zero=true;continue;}
+            if(a=="--estimate-root-zero") {o.estimate_root_zero=true;continue;}
+            if(a=="--estimate-root-shape") {o.estimate_root_shape=true;continue;}
             if(a=="--estimate-root-mean") {o.estimate_root_mean=true;continue;}
             if(i+1>=argc) throw std::runtime_error("Missing value for "+a);
             std::string v=argv[++i];
@@ -581,6 +670,12 @@ int run(int argc,char *const argv[]) {
             else if(a=="--root-mean") {o.root_mean=number(v);if(o.root_mean<0) throw std::runtime_error("Negative root mean");}
             else if(a=="--lambda") {o.lambda=number(v);if(o.lambda<0) throw std::runtime_error("Negative lambda");}
             else if(a=="--nu") {o.nu=number(v);if(o.nu<0) throw std::runtime_error("Negative nu");}
+            else if(a=="--mu") {o.mu=number(v);if(o.mu<0)throw std::runtime_error("Negative mu");}
+            else if(a=="--initial-mu") o.initial_mu=number(v);
+            else if(a=="--epsilon-zero") o.epsilon_zero=number(v);
+            else if(a=="--root-family") o.root_family=v;
+            else if(a=="--root-zero") o.root_zero=number(v);
+            else if(a=="--root-shape") o.root_shape=number(v);
             else if(a=="--initial-lambda") o.initial_lambda=number(v);
             else if(a=="--initial-nu") o.initial_nu=number(v);
             else if(a=="--initial-alpha") o.initial_alpha=number(v);
@@ -600,6 +695,13 @@ int run(int argc,char *const argv[]) {
             else if(a=="--matrix-output") o.matrix_file=v;
             else throw std::runtime_error("Unsupported innovation option: "+a);
         }
+        if(o.root_family!="poisson"&&o.root_family!="hurdle-poisson"&&o.root_family!="hurdle-nb")throw std::runtime_error("Unknown root family");
+        if(o.root_zero<0||o.root_zero>=1||o.root_shape<=0||(o.epsilon_zero<0&&o.epsilon_zero!=-1)||o.epsilon_zero>=1)throw std::runtime_error("Invalid root/error parameter");
+        if(o.estimate_mu&&o.mu>=0)throw std::runtime_error("Choose fixed or estimated mu");
+        if((o.estimate_root_zero||o.estimate_root_shape||o.root_family!="poisson")&&!o.root_file.empty())throw std::runtime_error("Parametric root options conflict with root file");
+        if(o.estimate_root_zero&&(o.root_family=="poisson"||o.root_zero<=0))throw std::runtime_error("Estimated root zero needs a hurdle root and an interior starting value");
+        if(o.estimate_root_shape&&o.root_family!="hurdle-nb")throw std::runtime_error("Root shape estimation requires hurdle-nb");
+        if(!o.error_file.empty()&&(o.epsilon_zero>=0||o.estimate_epsilon_zero))throw std::runtime_error("Zero-error options conflict with error file");
         if(o.maximum<1||o.maximum>5000||o.starts<1||o.iterations<1||o.threads<1)
             throw std::runtime_error("Invalid computational limit (max-count 1..5000)");
         if(o.estimate_root_mean&&(o.root_mean<=0||!o.root_file.empty()||o.simulate)) throw std::runtime_error("Estimating root mean requires positive --root-mean initial value, no root file, and observed data");
@@ -608,7 +710,7 @@ int run(int argc,char *const argv[]) {
         omp_set_num_threads(o.threads);
         #endif
         if(!o.matrix_file.empty()) {
-            auto a=transition(o.maximum,o.lambda,o.nu,o.matrix_time);auto f=output(o.matrix_file);
+            auto a=transition_asymmetric(o.maximum,o.lambda,o.mu<0?o.lambda:o.mu,o.nu,o.matrix_time);auto f=output(o.matrix_file);
             for(int i=0;i<=o.maximum;++i) {for(int j=0;j<=o.maximum;++j) f<<(j?"\t":"")<<a[size_t(i)*(o.maximum+1)+j];f<<'\n';} return 0;
         }
         if(o.categories<1||o.categories>32||o.epsilon<0||o.epsilon>=.5||
@@ -619,8 +721,8 @@ int run(int argc,char *const argv[]) {
         Model e(o); std::mt19937 rng(o.seed);
         if(o.simulate) {
             if(o.lambda<0||o.nu<0) throw std::runtime_error("Simulation requires --lambda and --nu");
-            if(o.estimate_epsilon||(o.categories>1&&o.alpha<0))throw std::runtime_error("Simulation requires fixed alpha and epsilon");
-            e.set_rates(o.lambda,o.nu,o.categories>1?o.alpha:1,o.epsilon); if(!std::isfinite(e.inclusion_log())) throw std::runtime_error("Zero inclusion probability");
+            if(o.estimate_mu||o.estimate_epsilon_zero||o.estimate_root_zero||o.estimate_root_shape||o.estimate_epsilon||(o.categories>1&&o.alpha<0))throw std::runtime_error("Simulation requires fixed alpha and epsilon");
+            e.set_rates(o.lambda,o.nu,o.categories>1?o.alpha:1,o.epsilon,o.mu,o.epsilon_zero); if(!std::isfinite(e.inclusion_log())) throw std::runtime_error("Zero inclusion probability");
             auto f=output(o.prefix+"_simulated.tsv");f<<"Desc\tFamily ID";for(auto& t:e.taxa) f<<'\t'<<t;f<<'\n';
             for(int i=0;i<o.simulate;++i) {auto y=e.sample(rng);f<<"BDI\tsim"<<i;for(int n:y) f<<'\t'<<n;f<<'\n';}return 0;
         }
@@ -629,15 +731,16 @@ int run(int argc,char *const argv[]) {
         double delta=std::numeric_limits<double>::quiet_NaN();
         if(o.check) {
             Options larger=o; larger.maximum=2*o.maximum;
-            Model check(larger); if(o.estimate_root_mean&&!check.set_root_mean(f.root_mean))throw std::runtime_error("Root prior truncation failed"); double large_score=check.nll(f.l,f.n,f.a,f.e);delta=f.score-large_score;
+            Model check(larger); if(o.root_file.empty()&&!check.set_root(f.root_mean,f.root_zero,f.root_shape))throw std::runtime_error("Root prior truncation failed"); double large_score=check.nll(f.l,f.n,f.a,f.e,f.mu,f.e0);delta=f.score-large_score;
         }
-        if(o.estimate_root_mean&&!e.set_root_mean(f.root_mean))throw std::runtime_error("Root prior truncation failed");
-        e.set_rates(f.l,f.n,f.a,f.e); double inc=e.inclusion_log();
+        if(o.root_file.empty()&&!e.set_root(f.root_mean,f.root_zero,f.root_shape))throw std::runtime_error("Root prior truncation failed");
+        e.set_rates(f.l,f.n,f.a,f.e,f.mu,f.e0); double inc=e.inclusion_log();
         auto report=output(o.prefix+"_results.tsv");
-        report<<"parameter\tvalue\nmodel\tBDI_equal_birth_death\nlambda\t"<<f.l<<"\nnu\t"<<f.n<<"\nnegative_log_likelihood\t"<<f.score
+        report<<"parameter\tvalue\nmodel\t"<<((o.mu>=0||o.estimate_mu)?"BDI_separate_birth_death":"BDI_equal_birth_death")<<"\nlambda\t"<<f.l<<"\nnu\t"<<f.n<<"\nnegative_log_likelihood\t"<<f.score
           <<"\nfamilies\t"<<e.families.size()<<"\nunique_patterns\t"<<e.patterns.size()<<"\nmax_count\t"<<o.maximum
           <<"\ngamma_categories\t"<<o.categories<<"\nalpha\t"<<f.a<<"\nepsilon\t"<<f.e<<"\nerror_model_file\t"<<o.error_file<<"\nalpha_at_bound\t"<<(o.categories>1&&(f.a<.0501||f.a>99.99))
-          <<"\nalpha_identifiable\t"<<(o.categories>1&&f.l>0)
+          <<"\nalpha_identifiable\t"<<(o.categories>1&&(f.l>0||f.mu>0))
+          <<"\nmu\t"<<(f.mu<0?f.l:f.mu)<<"\nmu_estimated\t"<<o.estimate_mu<<"\nepsilon_zero\t"<<(f.e0<0?f.e:f.e0)<<"\nepsilon_zero_separate\t"<<(f.e0>=0)<<"\nepsilon_zero_estimated\t"<<o.estimate_epsilon_zero<<"\nroot_zero_estimated\t"<<o.estimate_root_zero<<"\nroot_shape_estimated\t"<<o.estimate_root_shape<<"\nP_root_zero\t"<<e.prior[0]<<"\nroot_family\t"<<o.root_family<<"\nroot_zero\t"<<f.root_zero<<"\nroot_shape\t"<<f.root_shape
           <<"\nroot_mean\t"<<f.root_mean<<"\nroot_mean_estimated\t"<<o.estimate_root_mean<<"\nroot_prior_file\t"<<o.root_file<<"\nroot_prior_omitted_mass\t"<<e.prior_tail
           <<"\nconditioned_on_observed\t"<<e.observed_condition<<"\nlog_inclusion_probability\t"<<inc
           <<"\nboundary_fits\t"<<o.boundary_fits<<"\noptimizer_converged\t"<<f.converged<<"\ntruncation_nll_difference\t"<<delta

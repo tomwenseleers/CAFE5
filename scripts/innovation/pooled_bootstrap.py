@@ -34,6 +34,7 @@ def main():
  a=p.parse_args();a.binary=a.binary.resolve();a.tree=a.tree.resolve();a.output.mkdir(parents=True,exist_ok=True)
  r=read_results(a.observed);ids,ll,change,surprise,mapchange=stats(a.observed,a.nodes);n=len(ids)
  if r['truncation_pass']!='1' or r['optimizer_converged']!='1':raise ValueError('Observed fit failed diagnostics')
+ if r.get('model')!='BDI_equal_birth_death' or r.get('root_family','poisson')!='poisson' or r.get('epsilon_zero_separate','0')=='1':raise ValueError('This legacy pooled driver does not yet refit the model-improvement parameters; use a matching validated driver')
  if r.get('root_prior_file') or r.get('error_model_file'):raise ValueError('This pooled driver currently supports a Poisson root law and scalar epsilon only')
  theta={k:float(r[k]) for k in ['lambda','nu','alpha','epsilon']}
  common=['--innovation','-t',str(a.tree),'--root-mean',r['root_mean'],'--gamma-cats',r['gamma_categories'],'--threads',str(a.threads),'--iterations','1200','--starts','1']

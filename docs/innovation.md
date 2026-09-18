@@ -62,9 +62,12 @@ a separate model extension.
 A root distribution must be supplied explicitly. Choose `--root-mean M` for a
 Poisson distribution, including zero, or `--root-prior FILE` for a finite
 nonnegative distribution (two whitespace-separated columns: count and weight;
-no header, unique counts; weights are normalized). Root-distribution parameters
-are fixed, not jointly fitted with lambda and nu. Comparing several plausible
+no header, unique counts; weights are normalized). By default root-distribution parameters
+are fixed. Comparing several plausible
 root laws is recommended because innovation and ancestral abundance can trade off.
+`--estimate-root-mean` now optionally fits the Poisson mean jointly; the fixed-root
+interface above remains supported. Experimental unequal-rate and hurdle-root
+options are documented in [model_improvement_methods.md](model_improvement_methods.md).
 
 Scaled pruning computes `L_f(n)=Pr(Y_f=y_f|N_root=n)`. The objective uses
 **summation**, not maximization, over root counts:

@@ -20,7 +20,9 @@ def features(path):
             'one_gene_total_fraction': float((x.sum(axis=1) == 1).mean()),
             'all_species_present_fraction': float((occupied == x.shape[1]).mean()),
             'one_copy_every_species_fraction': float((x == 1).all(axis=1).mean()),
-            'differential_gt20_fraction': float(((x.max(axis=1)-x.min(axis=1)) > 20).mean())}
+            'differential_gt20_fraction': float(((x.max(axis=1)-x.min(axis=1)) > 20).mean()),
+            **{'mean_count_' + taxon: float(x[:,i].mean()) for i,taxon in enumerate(header[2:])},
+            **{'zero_fraction_' + taxon: float((x[:,i]==0).mean()) for i,taxon in enumerate(header[2:])}}
 
 
 def main():
@@ -39,11 +41,17 @@ def main():
     if r['optimizer_converged'] != '1' or r['truncation_pass'] != '1':
         raise ValueError('Input fit failed diagnostics')
     if r.get('root_prior_file') or r['conditioned_on_observed'] != '1':
-        raise ValueError('This diagnostic expects an observed-family Poisson-root fit')
+        raise ValueError('This diagnostic expects an observed-family parametric-root fit')
     observed = features(a.counts)
     command = [str(a.binary.resolve()), '--innovation', '-t', str(a.tree),
                '--root-mean', r['root_mean'], '--gamma-cats', r['gamma_categories'],
                '--lambda', r['lambda'], '--nu', r['nu'], '--max-count', r['max_count']]
+    if r.get('model') == 'BDI_separate_birth_death':
+        command += ['--mu', r['mu']]
+    if r.get('epsilon_zero_separate') == '1':
+        command += ['--epsilon-zero', r['epsilon_zero']]
+    if r.get('root_family', 'poisson') != 'poisson':
+        command += ['--root-family', r['root_family'], '--root-zero', r['root_zero'], '--root-shape', r['root_shape']]
     if int(r['gamma_categories']) > 1:
         command += ['--alpha', r['alpha']]
     command += ['--error-model', r['error_model_file']] if r.get('error_model_file') else ['--epsilon', r['epsilon']]
