@@ -1,0 +1,611 @@
+HOG	species	gene_id	gene_symbol	gene_name	source
+N0.HOG0000000	Polistes_dominula	LOC107073510	LOC107073510	uncharacterized LOC107073510	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073711	LOC107073711	uncharacterized LOC107073711	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107071493	LOC107071493	uncharacterized LOC107071493	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073335	LOC107073335	uncharacterized LOC107073335	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107068639	LOC107068639	uncharacterized LOC107068639	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073724	LOC107073724	uncharacterized LOC107073724	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073388	LOC107073388	uncharacterized LOC107073388	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107068638	LOC107068638	uncharacterized LOC107068638	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073478	LOC107073478	uncharacterized LOC107073478	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107072395	LOC107072395	uncharacterized LOC107072395	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073631	LOC107073631	uncharacterized LOC107073631	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073334	LOC107073334	uncharacterized LOC107073334	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073701	LOC107073701	uncharacterized LOC107073701	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107074033	LOC107074033	uncharacterized LOC107074033	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073556	LOC107073556	uncharacterized LOC107073556	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073692	LOC107073692	uncharacterized LOC107073692	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073588	LOC107073588	uncharacterized LOC107073588	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107073772	LOC107073772	uncharacterized LOC107073772	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107072911	LOC107072911	uncharacterized LOC107072911	NCBI gene table
+N0.HOG0000000	Polistes_dominula	LOC107064241	LOC107064241	uncharacterized LOC107064241	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073404	LOC107073404	uncharacterized LOC107073404	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073654	LOC107073654	uncharacterized LOC107073654	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107064221	LOC107064221	uncharacterized LOC107064221	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073475	LOC107073475	uncharacterized LOC107073475	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073522	LOC107073522	uncharacterized LOC107073522	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073560	LOC107073560	uncharacterized LOC107073560	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073615	LOC107073615	uncharacterized LOC107073615	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107074034	LOC107074034	uncharacterized LOC107074034	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073792	LOC107073792	uncharacterized LOC107073792	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073743	LOC107073743	uncharacterized LOC107073743	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073387	LOC107073387	uncharacterized LOC107073387	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073333	LOC107073333	uncharacterized LOC107073333	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073559	LOC107073559	uncharacterized LOC107073559	NCBI gene table
+N0.HOG0000001	Polistes_dominula	LOC107073759	LOC107073759	uncharacterized LOC107073759	NCBI gene table
+N0.HOG0000002	Polistes_dominula	LOC107068641	LOC107068641	uncharacterized LOC107068641	NCBI gene table
+N0.HOG0000002	Polistes_dominula	LOC107074376	LOC107074376	uncharacterized LOC107074376	NCBI gene table
+N0.HOG0000002	Polistes_dominula	LOC107073766	LOC107073766	uncharacterized LOC107073766	NCBI gene table
+N0.HOG0000002	Polistes_dominula	LOC107073686	LOC107073686	uncharacterized LOC107073686	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071467	LOC127071467	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071254	LOC127071254	odorant receptor 82a-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071242	LOC127071242	odorant receptor 43a-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071256	LOC127071256	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071253	LOC127071253	odorant receptor 4-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071459	LOC127071459	odorant receptor 67c-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071461	LOC127071461	odorant receptor 4-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071243	LOC127071243	uncharacterized LOC127071243	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071469	LOC127071469	uncharacterized LOC127071469	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071468	LOC127071468	odorant receptor 22c-like	NCBI gene table
+N0.HOG0000003	Vespula_vulgaris	LOC127071466	LOC127071466	uncharacterized LOC127071466	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067912	LOC107067912	uncharacterized LOC107067912	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067959	LOC107067959	odorant receptor 22c-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067907	LOC107067907	uncharacterized LOC107067907	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067908	LOC107067908	odorant receptor 43a-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067981	LOC107067981	uncharacterized LOC107067981	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067906	LOC107067906	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067918	LOC107067918	uncharacterized LOC107067918	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107068019	LOC107068019	uncharacterized LOC107068019	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107068018	LOC107068018	uncharacterized LOC107068018	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067917	LOC107067917	uncharacterized LOC107067917	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067916	LOC107067916	odorant receptor 22b-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067911	LOC107067911	odorant receptor 4-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067955	LOC107067955	uncharacterized LOC107067955	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067913	LOC107067913	odorant receptor 22c-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067914	LOC107067914	odorant receptor 4-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067915	LOC107067915	odorant receptor 4-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067909	LOC107067909	odorant receptor 4-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067910	LOC107067910	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000003	Polistes_dominula	LOC107067957	LOC107067957	uncharacterized LOC107067957	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127066200	LOC127066200	uncharacterized LOC127066200	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127072203	LOC127072203	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127063878	LOC127063878	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127063876	LOC127063876	uncharacterized LOC127063876	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127063989	LOC127063989	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127063875	LOC127063875	odorant receptor 83a-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127065411	LOC127065411	odorant receptor 63a-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127068535	LOC127068535	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070495	LOC127070495	uncharacterized LOC127070495	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070540	LOC127070540	odorant receptor 4-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070492	LOC127070492	odorant receptor 67c-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070494	LOC127070494	uncharacterized LOC127070494	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127063998	LOC127063998	uncharacterized LOC127063998	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127063863	LOC127063863	uncharacterized LOC127063863	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070543	LOC127070543	uncharacterized LOC127070543	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070539	LOC127070539	uncharacterized LOC127070539	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070541	LOC127070541	uncharacterized LOC127070541	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070542	LOC127070542	odorant receptor 4-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127068900	LOC127068900	odorant receptor 22c-like	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127068416	LOC127068416	uncharacterized LOC127068416	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127067563	LOC127067563	uncharacterized LOC127067563	NCBI gene table
+N0.HOG0000004	Vespula_vulgaris	LOC127070876	LOC127070876	uncharacterized LOC127070876	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107068954	LOC107068954	putative odorant receptor 85e	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107063844	LOC107063844	uncharacterized LOC107063844	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107073352	LOC107073352	odorant receptor 22c-like	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107068956	LOC107068956	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107068955	LOC107068955	uncharacterized LOC107068955	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107063630	LOC107063630	odorant receptor 9a-like	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107067508	LOC107067508	uncharacterized LOC107067508	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107071107	LOC107071107	odorant receptor 4-like	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107071095	LOC107071095	odorant receptor 4-like	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107071096	LOC107071096	uncharacterized LOC107071096	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107063660	LOC107063660	odorant receptor 9a-like	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107064592	LOC107064592	uncharacterized LOC107064592	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107071097	LOC107071097	uncharacterized LOC107071097	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107071105	LOC107071105	uncharacterized LOC107071105	NCBI gene table
+N0.HOG0000004	Polistes_dominula	LOC107071106	LOC107071106	uncharacterized LOC107071106	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107070923	LOC107070923	uncharacterized LOC107070923	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073775	LOC107073775	uncharacterized LOC107073775	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073225	LOC107073225	uncharacterized LOC107073225	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107066476	LOC107066476	uncharacterized LOC107066476	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107070922	LOC107070922	uncharacterized LOC107070922	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107063849	LOC107063849	uncharacterized LOC107063849	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073726	LOC107073726	uncharacterized LOC107073726	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107069469	LOC107069469	uncharacterized LOC107069469	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107070460	LOC107070460	uncharacterized LOC107070460	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073435	LOC107073435	uncharacterized LOC107073435	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073736	LOC107073736	uncharacterized LOC107073736	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107074252	LOC107074252	uncharacterized LOC107074252	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073386	LOC107073386	uncharacterized LOC107073386	NCBI gene table
+N0.HOG0000018	Polistes_dominula	LOC107073791	LOC107073791	uncharacterized LOC107073791	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068527	LOC127068527	zinc finger protein 845-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068528	LOC127068528	zinc finger protein 449-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068530	LOC127068530	zinc finger Y-chromosomal protein-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068470	LOC127068470	longitudinals lacking protein-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068456	LOC127068456	zinc finger protein 254-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068473	LOC127068473	zinc finger protein 513-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068457	LOC127068457	adult enhancer factor 1-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068532	LOC127068532	zinc finger protein 425-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068531	LOC127068531	zinc finger protein 568-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068534	LOC127068534	zinc finger protein 343-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068533	LOC127068533	zinc finger protein 57-like	NCBI gene table
+N0.HOG0000022	Vespula_vulgaris	LOC127068472	LOC127068472	protein krueppel-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067516	LOC107067516	zinc finger protein interacting with ribonucleoprotein K-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067528	LOC107067528	zinc finger protein 263-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067513	LOC107067513	transcriptional regulator of yeast form adherence 4-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067530	LOC107067530	longitudinals lacking protein	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067529	LOC107067529	zinc finger X-chromosomal protein-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067523	LOC107067523	POU domain, class 3, transcription factor 2-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067514	LOC107067514	gastrula zinc finger protein XlCGF8.2DB-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067531	LOC107067531	zinc finger X-chromosomal protein-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067517	LOC107067517	zinc finger protein 468-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067526	LOC107067526	zinc finger protein 768-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067515	LOC107067515	zinc finger protein 585B-like	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067518	LOC107067518	zinc finger protein 2 homolog	NCBI gene table
+N0.HOG0000022	Polistes_dominula	LOC107067527	LOC107067527	zinc finger protein squeeze-like	NCBI gene table
+N0.HOG0000032	Vespula_vulgaris	LOC127064798	LOC127064798	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Vespula_vulgaris	LOC127061365	LOC127061365	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073788	LOC107073788	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107071717	LOC107071717	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073514	LOC107073514	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073706	LOC107073706	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073551	LOC107073551	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073764	LOC107073764	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073790	LOC107073790	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073508	LOC107073508	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073444	LOC107073444	uncharacterized LOC107073444	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107063626	LOC107063626	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073562	LOC107073562	uncharacterized LOC107073562	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073975	LOC107073975	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073476	LOC107073476	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073418	LOC107073418	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073487	LOC107073487	uncharacterized LOC107073487	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107068382	LOC107068382	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107068755	LOC107068755	piggyBac transposable element-derived protein 2-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107071369	LOC107071369	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107065790	LOC107065790	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073554	LOC107073554	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073753	LOC107073753	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107067008	LOC107067008	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107065788	LOC107065788	uncharacterized LOC107065788	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107065789	LOC107065789	uncharacterized LOC107065789	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073506	LOC107073506	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107071450	LOC107071450	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107072411	LOC107072411	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107066952	LOC107066952	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073178	LOC107073178	piggyBac transposable element-derived protein 1-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107073177	LOC107073177	uncharacterized LOC107073177	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107063654	LOC107063654	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000032	Polistes_dominula	LOC107072298	LOC107072298	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0000038	Polistes_dominula	LOC107073752	LOC107073752	uncharacterized LOC107073752	NCBI gene table
+N0.HOG0000038	Polistes_dominula	LOC107073258	LOC107073258	uncharacterized LOC107073258	NCBI gene table
+N0.HOG0000038	Polistes_dominula	LOC107073796	LOC107073796	uncharacterized LOC107073796	NCBI gene table
+N0.HOG0000041	Polistes_dominula	LOC107072267	LOC107072267	uncharacterized LOC107072267	NCBI gene table
+N0.HOG0000041	Polistes_dominula	LOC107073598	LOC107073598	uncharacterized LOC107073598	NCBI gene table
+N0.HOG0000046	Polistes_dominula	LOC107073647	LOC107073647	uncharacterized LOC107073647	NCBI gene table
+N0.HOG0000047	Polistes_dominula	LOC107073218	LOC107073218	uncharacterized LOC107073218	NCBI gene table
+N0.HOG0000047	Polistes_dominula	LOC107073300	LOC107073300	RNA-directed DNA polymerase from mobile element jockey-like	NCBI gene table
+N0.HOG0000047	Polistes_dominula	LOC107073635	LOC107073635	uncharacterized LOC107073635	NCBI gene table
+N0.HOG0000047	Polistes_dominula	LOC107068640	LOC107068640	uncharacterized LOC107068640	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062171	LOC127062171	uncharacterized LOC127062171	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062744	LOC127062744	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062732	LOC127062732	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062177	LOC127062177	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062737	LOC127062737	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062172	LOC127062172	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062176	LOC127062176	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062173	LOC127062173	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062758	LOC127062758	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062739	LOC127062739	odorant receptor 47a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062178	LOC127062178	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062725	LOC127062725	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062179	LOC127062179	uncharacterized LOC127062179	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062726	LOC127062726	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062745	LOC127062745	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062727	LOC127062727	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062728	LOC127062728	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062731	LOC127062731	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062753	LOC127062753	odorant receptor 49b-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062168	LOC127062168	uncharacterized LOC127062168	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062169	LOC127062169	uncharacterized LOC127062169	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062170	LOC127062170	uncharacterized LOC127062170	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062740	LOC127062740	odorant receptor 67c-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062167	LOC127062167	odorant receptor 4-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062724	LOC127062724	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Vespula_vulgaris	LOC127062723	LOC127062723	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107069975	LOC107069975	odorant receptor coreceptor-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068888	LOC107068888	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068911	LOC107068911	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107069958	LOC107069958	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068903	LOC107068903	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068895	LOC107068895	uncharacterized LOC107068895	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068922	LOC107068922	uncharacterized LOC107068922	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107069947	LOC107069947	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068917	LOC107068917	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107069924	LOC107069924	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107069909	LOC107069909	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000049	Polistes_dominula	LOC107068879	LOC107068879	uncharacterized LOC107068879	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072298	LOC127072298	odorant receptor 2a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072297	LOC127072297	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072295	LOC127072295	uncharacterized LOC127072295	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072417	LOC127072417	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072291	LOC127072291	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072292	LOC127072292	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072278	LOC127072278	uncharacterized LOC127072278	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072293	LOC127072293	putative odorant receptor 69a	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072413	LOC127072413	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072414	LOC127072414	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072294	LOC127072294	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072415	LOC127072415	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127071010	LOC127071010	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072307	LOC127072307	odorant receptor 82a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072289	LOC127072289	uncharacterized LOC127072289	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072462	LOC127072462	odorant receptor 10a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072290	LOC127072290	uncharacterized LOC127072290	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072310	LOC127072310	odorant receptor 82a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072311	LOC127072311	odorant receptor 82a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072288	LOC127072288	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072308	LOC127072308	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072282	LOC127072282	uncharacterized LOC127072282	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072312	LOC127072312	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072286	LOC127072286	uncharacterized LOC127072286	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072285	LOC127072285	odorant receptor 67a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072284	LOC127072284	odorant receptor 9a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072309	LOC127072309	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072287	LOC127072287	odorant receptor 45b-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072313	LOC127072313	putative odorant receptor 85d	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072283	LOC127072283	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072281	LOC127072281	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072416	LOC127072416	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072296	LOC127072296	odorant receptor 10a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072279	LOC127072279	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127071154	LOC127071154	odorant receptor 4-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127072299	LOC127072299	odorant receptor 85c-like	NCBI gene table
+N0.HOG0000050	Vespula_vulgaris	LOC127064088	LOC127064088	odorant receptor 82a-like	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107067895	LOC107067895	uncharacterized LOC107067895	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107069745	LOC107069745	odorant receptor 85f-like	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107071314	LOC107071314	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107069746	LOC107069746	uncharacterized LOC107069746	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107073503	LOC107073503	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107073504	LOC107073504	uncharacterized LOC107073504	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107073299	LOC107073299	odorant receptor 85c-like	NCBI gene table
+N0.HOG0000050	Polistes_dominula	LOC107073493	LOC107073493	odorant receptor 82a-like	NCBI gene table
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003554	LOC107067895; LOC127072298	Odorant receptor; odorant receptor 2a-like	OrthoFinder orthology transfer from: Polistes_dominula; Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003635	LOC127072297	odorant receptor 13a-like	OrthoFinder orthology transfer from: Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005004044	LOC127072297	odorant receptor 13a-like	OrthoFinder orthology transfer from: Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003420	LOC127072289; LOC127072290; LOC127072307; LOC127072310; LOC127072311; LOC127072462	Odorant receptor; odorant receptor 82a-like; odorant receptor 10a-like	OrthoFinder orthology transfer from: Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005004238	LOC127072281; LOC127072282; LOC127072283; LOC127072284; LOC127072285; LOC127072286; LOC127072287; LOC127072288; LOC127072308; LOC127072309; LOC127072312; LOC127072313	odorant receptor 13a-like; Odorant receptor; odorant receptor 9a-like; odorant receptor 67a-like; odorant receptor 45b-like; odorant receptor 4-like; putative odorant receptor 85d	OrthoFinder orthology transfer from: Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003940	LOC107069745	odorant receptor 85f-like	OrthoFinder orthology transfer from: Polistes_dominula
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003735	LOC107069745	odorant receptor 85f-like	OrthoFinder orthology transfer from: Polistes_dominula
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003771	LOC107069745	odorant receptor 85f-like	OrthoFinder orthology transfer from: Polistes_dominula
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003443	LOC107069745	odorant receptor 85f-like	OrthoFinder orthology transfer from: Polistes_dominula
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005004425	LOC107071314; LOC107073503; LOC107073504; LOC127071154; LOC127072279; LOC127072296; LOC127072416	odorant receptor 13a-like; Odorant receptor; odorant receptor 4-like; odorant receptor 10a-like	OrthoFinder orthology transfer from: Polistes_dominula; Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003315	LOC107073299; LOC127072299	odorant receptor 85c-like	OrthoFinder orthology transfer from: Polistes_dominula; Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005003990	LOC107073299; LOC127072299	odorant receptor 85c-like	OrthoFinder orthology transfer from: Polistes_dominula; Vespula_vulgaris
+N0.HOG0000050	Ancistrocerus_nigricornis	ENSANRG00005001794	LOC107073493; LOC127064088	odorant receptor 82a-like	OrthoFinder orthology transfer from: Polistes_dominula; Vespula_vulgaris
+N0.HOG0000053	Polistes_dominula	LOC107073505	LOC107073505	uncharacterized LOC107073505	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073219	LOC107073219	uncharacterized LOC107073219	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073567	LOC107073567	uncharacterized LOC107073567	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107066660	LOC107066660	uncharacterized LOC107066660	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073648	LOC107073648	uncharacterized LOC107073648	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073592	LOC107073592	uncharacterized LOC107073592	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107071375	LOC107071375	uncharacterized LOC107071375	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073544	LOC107073544	uncharacterized LOC107073544	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073350	LOC107073350	uncharacterized LOC107073350	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073349	LOC107073349	uncharacterized LOC107073349	NCBI gene table
+N0.HOG0000053	Polistes_dominula	LOC107073576	LOC107073576	uncharacterized LOC107073576	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127066073	LOC127066073	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127066360	LOC127066360	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127066193	LOC127066193	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127066359	LOC127066359	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127066194	LOC127066194	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127066358	LOC127066358	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127065922	LOC127065922	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127067612	LOC127067612	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127067611	LOC127067611	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Vespula_vulgaris	LOC127069788	LOC127069788	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107066953	LOC107066953	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072897	LOC107072897	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067949	LOC107067949	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067943	LOC107067943	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107066951	LOC107066951	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107066950	LOC107066950	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107073553	LOC107073553	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107073638	LOC107073638	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072896	Cyp312a1	Cytochrome P450 312a1	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067899	LOC107067899	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107073699	LOC107073699	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067946	LOC107067946	cytochrome P450 4c3-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067897	LOC107067897	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067928	LOC107067928	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107068301	LOC107068301	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067936	LOC107067936	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067900	LOC107067900	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072127	LOC107072127	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072153	LOC107072153	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067935	LOC107067935	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107067926	LOC107067926	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072112	LOC107072112	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072637	LOC107072637	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000056	Polistes_dominula	LOC107072779	LOC107072779	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127066212	LOC127066212	uncharacterized LOC127066212	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072318	LOC127072318	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072411	LOC127072411	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072460	LOC127072460	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072317	LOC127072317	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072459	LOC127072459	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072461	LOC127072461	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072314	LOC127072314	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127072438	LOC127072438	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Vespula_vulgaris	LOC127069462	LOC127069462	fatty acyl-CoA reductase wat-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107068659	LOC107068659	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107068658	LOC107068658	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073683	LOC107073683	fatty acyl-CoA reductase 1-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073684	LOC107073684	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107072968	LOC107072968	fatty acyl-CoA reductase 1-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107064457	LOC107064457	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073257	LOC107073257	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107071487	LOC107071487	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073550	LOC107073550	fatty acyl-CoA reductase 1-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073446	LOC107073446	fatty acyl-CoA reductase 1-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073574	LOC107073574	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107065778	LOC107065778	fatty acyl-CoA reductase 1-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073673	LOC107073673	fatty acyl-CoA reductase 1-like	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107067164	LOC107067164	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073445	LOC107073445	putative fatty acyl-CoA reductase CG8306	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073763	LOC107073763	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107072461	LOC107072461	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073798	LOC107073798	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073746	LOC107073746	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107071827	LOC107071827	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107067174	LOC107067174	putative fatty acyl-CoA reductase CG8306	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073617	LOC107073617	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107071486	LOC107071486	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107071826	LOC107071826	putative fatty acyl-CoA reductase CG8306	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073727	LOC107073727	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073669	LOC107073669	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073589	LOC107073589	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107073718	LOC107073718	putative fatty acyl-CoA reductase CG5065	NCBI gene table
+N0.HOG0000060	Polistes_dominula	LOC107071461	LOC107071461	putative fatty acyl-CoA reductase CG8306	NCBI gene table
+N0.HOG0000061	Polistes_dominula	LOC107071931	LOC107071931	tigger transposable element-derived protein 1-like	NCBI gene table
+N0.HOG0000061	Polistes_dominula	LOC107071792	LOC107071792	uncharacterized LOC107071792	NCBI gene table
+N0.HOG0000061	Polistes_dominula	LOC107065344	LOC107065344	uncharacterized LOC107065344	NCBI gene table
+N0.HOG0000061	Polistes_dominula	LOC107072239	LOC107072239	jerky protein homolog-like	NCBI gene table
+N0.HOG0000096	Polistes_dominula	LOC107070139	LOC107070139	uncharacterized LOC107070139	NCBI gene table
+N0.HOG0000096	Polistes_dominula	LOC107073616	LOC107073616	uncharacterized LOC107073616	NCBI gene table
+N0.HOG0000096	Polistes_dominula	LOC107067896	LOC107067896	uncharacterized LOC107067896	NCBI gene table
+N0.HOG0000096	Polistes_dominula	LOC107071485	LOC107071485	uncharacterized LOC107071485	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107073530	LOC107073530	uncharacterized LOC107073530	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107072503	LOC107072503	uncharacterized LOC107072503	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107072154	LOC107072154	uncharacterized LOC107072154	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107069635	LOC107069635	uncharacterized LOC107069635	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107066621	LOC107066621	uncharacterized LOC107066621	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107063850	LOC107063850	uncharacterized LOC107063850	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107072161	LOC107072161	uncharacterized LOC107072161	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107067854	LOC107067854	uncharacterized LOC107067854	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107067024	LOC107067024	uncharacterized LOC107067024	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107071468	LOC107071468	uncharacterized LOC107071468	NCBI gene table
+N0.HOG0000098	Polistes_dominula	LOC107067025	LOC107067025	uncharacterized LOC107067025	NCBI gene table
+N0.HOG0000101	Vespula_vulgaris	LOC127071132	LOC127071132	probable cytochrome P450 4p2	NCBI gene table
+N0.HOG0000101	Vespula_vulgaris	LOC127071130	LOC127071130	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Vespula_vulgaris	LOC127071131	LOC127071131	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Vespula_vulgaris	LOC127072492	LOC127072492	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Vespula_vulgaris	LOC127071129	LOC127071129	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Vespula_vulgaris	LOC127071128	LOC127071128	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107064932	LOC107064932	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073689	LOC107073689	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073593	LOC107073593	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065070	LOC107065070	cytochrome P450 4g15-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073672	LOC107073672	cytochrome P450 4g15-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107069800	LOC107069800	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065361	LOC107065361	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073749	LOC107073749	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073595	LOC107073595	cytochrome P450 4p1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065768	LOC107065768	probable cytochrome P450 4ac1	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073471	LOC107073471	cytochrome P450 4c3-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073594	LOC107073594	cytochrome P450 4c3-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107064933	LOC107064933	cytochrome P450 3A13-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065602	LOC107065602	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107071388	LOC107071388	uncharacterized LOC107071388	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065068	LOC107065068	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073688	LOC107073688	cytochrome P450 4V2-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073729	LOC107073729	cytochrome P450 4V2-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073472	LOC107073472	cytochrome P450 4V2-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065071	LOC107065071	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073620	LOC107073620	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107069071	LOC107069071	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107065359	LOC107065359	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073748	LOC107073748	cytochrome P450 4V2-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073787	LOC107073787	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107071176	LOC107071176	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000101	Polistes_dominula	LOC107073473	LOC107073473	cytochrome P450 4C1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064461	LOC127064461	glutamate receptor 3-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064871	LOC127064871	glutamate receptor U1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064886	LOC127064886	glutamate receptor ionotropic, kainate glr-3-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064453	LOC127064453	uncharacterized LOC127064453	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064772	LOC127064772	uncharacterized LOC127064772	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071083	LOC127071083	uncharacterized LOC127071083	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064776	LOC127064776	glutamate receptor ionotropic, delta-2-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064775	LOC127064775	probable glutamate receptor	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064773	LOC127064773	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064774	LOC127064774	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064452	LOC127064452	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064451	LOC127064451	glutamate receptor 2-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064822	LOC127064822	glutamate receptor 1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064823	LOC127064823	probable glutamate receptor	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064825	LOC127064825	probable glutamate receptor	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064824	LOC127064824	glutamate receptor ionotropic, kainate glr-3-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127070958	LOC127070958	probable glutamate receptor	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071150	LOC127071150	probable glutamate receptor	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071152	LOC127071152	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071068	LOC127071068	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071149	LOC127071149	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071073	LOC127071073	glutamate receptor 3-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071066	LOC127071066	glutamate receptor ionotropic, delta-2-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127070959	LOC127070959	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071153	LOC127071153	glutamate receptor 1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071070	LOC127071070	glutamate receptor-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127071156	LOC127071156	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064821	LOC127064821	probable glutamate receptor	NCBI gene table
+N0.HOG0000108	Vespula_vulgaris	LOC127064777	LOC127064777	uncharacterized LOC127064777	NCBI gene table
+N0.HOG0000108	Polistes_dominula	LOC107074054	LOC107074054	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Polistes_dominula	LOC107074055	LOC107074055	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Polistes_dominula	LOC107074236	LOC107074236	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Polistes_dominula	LOC107074235	LOC107074235	glutamate receptor ionotropic, delta-1-like	NCBI gene table
+N0.HOG0000108	Polistes_dominula	LOC107073709	LOC107073709	glutamate receptor 1-like	NCBI gene table
+N0.HOG0000108	Polistes_dominula	LOC107066062	LOC107066062	uncharacterized LOC107066062	NCBI gene table
+N0.HOG0000108	Ancistrocerus_nigricornis	ENSANRG00005002011	LOC107066062; LOC107073709; LOC107074055; LOC107074235; LOC107074236; LOC127064451; LOC127064452; LOC127064453; LOC127064771; LOC127064772; LOC127064773; LOC127064774; LOC127064775; LOC127064776; LOC127064777; LOC127064821; LOC127064822; LOC127064823; LOC127064824; LOC127064825; LOC127064871; LOC127064886; LOC127070958; LOC127070959; LOC127071066; LOC127071068; LOC127071070; LOC127071073; LOC127071083; LOC127071149; LOC127071150; LOC127071152; LOC127071153; LOC127071156	Ligated ion channel L-glutamate- and glycine-binding site; glutamate receptor 1-like; glutamate receptor ionotropic, delta-1-like; glutamate receptor 2-like; glutamate receptor ionotropic, NMDA 3A-like; probable glutamate receptor; glutamate receptor ionotropic, delta-2-like; glutamate receptor ionotropic, kainate glr-3-like; glutamate receptor U1-like; glutamate receptor-like; glutamate receptor 3-like	OrthoFinder orthology transfer from: Polistes_dominula; Vespula_vulgaris
+N0.HOG0000114	Vespula_vulgaris	LOC127069621	LOC127069621	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127064300	LOC127064300	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127063701	LOC127063701	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062155	LOC127062155	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062193	LOC127062193	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062156	LOC127062156	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062548	LOC127062548	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062556	LOC127062556	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062547	LOC127062547	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062557	LOC127062557	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062549	LOC127062549	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062550	LOC127062550	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Vespula_vulgaris	LOC127062188	LOC127062188	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Polistes_dominula	LOC107071460	LOC107071460	fatty acid synthase-like	NCBI gene table
+N0.HOG0000114	Polistes_dominula	LOC107067738	FASN3	Fatty acid synthase 3	NCBI gene table
+N0.HOG0000118	Polistes_dominula	LOC107071707	LOC107071707	uncharacterized LOC107071707	NCBI gene table
+N0.HOG0000118	Polistes_dominula	LOC107073758	LOC107073758	uncharacterized LOC107073758	NCBI gene table
+N0.HOG0000119	Polistes_dominula	LOC107072260	LOC107072260	nucleophosmin-like	NCBI gene table
+N0.HOG0000120	Polistes_dominula	LOC107073723	LOC107073723	uncharacterized LOC107073723	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107072770	LOC107072770	uncharacterized LOC107072770	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107074303	LOC107074303	uncharacterized LOC107074303	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073778	LOC107073778	uncharacterized LOC107073778	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107072761	LOC107072761	uncharacterized LOC107072761	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073224	LOC107073224	uncharacterized LOC107073224	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073653	LOC107073653	uncharacterized LOC107073653	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073389	LOC107073389	uncharacterized LOC107073389	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073646	LOC107073646	uncharacterized LOC107073646	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073583	LOC107073583	uncharacterized LOC107073583	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073535	LOC107073535	uncharacterized LOC107073535	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073526	LOC107073526	uncharacterized LOC107073526	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073524	LOC107073524	uncharacterized LOC107073524	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073542	LOC107073542	uncharacterized LOC107073542	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073448	LOC107073448	uncharacterized LOC107073448	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073773	LOC107073773	uncharacterized LOC107073773	NCBI gene table
+N0.HOG0000122	Polistes_dominula	LOC107073566	LOC107073566	uncharacterized LOC107073566	NCBI gene table
+N0.HOG0000128	Polistes_dominula	LOC107073656	LOC107073656	nucleic-acid-binding protein from mobile element jockey-like	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127064791	LOC127064791	uncharacterized LOC127064791	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127072452	LOC127072452	uncharacterized LOC127072452	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127072301	LOC127072301	uncharacterized LOC127072301	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127072300	LOC127072300	uncharacterized LOC127072300	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127069930	LOC127069930	uncharacterized LOC127069930	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068650	LOC127068650	uncharacterized LOC127068650	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068522	LOC127068522	uncharacterized LOC127068522	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068516	LOC127068516	uncharacterized LOC127068516	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068521	LOC127068521	uncharacterized LOC127068521	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068519	LOC127068519	uncharacterized LOC127068519	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068540	LOC127068540	uncharacterized LOC127068540	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068517	LOC127068517	uncharacterized LOC127068517	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127069927	LOC127069927	uncharacterized LOC127069927	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068649	LOC127068649	uncharacterized LOC127068649	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068520	LOC127068520	uncharacterized LOC127068520	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068541	LOC127068541	uncharacterized LOC127068541	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068648	LOC127068648	uncharacterized LOC127068648	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068647	LOC127068647	uncharacterized LOC127068647	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127068513	LOC127068513	uncharacterized LOC127068513	NCBI gene table
+N0.HOG0000158	Vespula_vulgaris	LOC127072280	LOC127072280	uncharacterized LOC127072280	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107070831	LOC107070831	odorant receptor 10a-like	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107066992	LOC107066992	uncharacterized LOC107066992	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107066993	LOC107066993	uncharacterized LOC107066993	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073597	LOC107073597	uncharacterized LOC107073597	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073260	LOC107073260	uncharacterized LOC107073260	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073261	LOC107073261	uncharacterized LOC107073261	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073262	LOC107073262	uncharacterized LOC107073262	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073263	LOC107073263	uncharacterized LOC107073263	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073708	LOC107073708	uncharacterized LOC107073708	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073547	LOC107073547	uncharacterized LOC107073547	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073776	LOC107073776	uncharacterized LOC107073776	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073765	LOC107073765	uncharacterized LOC107073765	NCBI gene table
+N0.HOG0000158	Polistes_dominula	LOC107073639	LOC107073639	uncharacterized LOC107073639	NCBI gene table
+N0.HOG0000158	Ancistrocerus_nigricornis	ENSANRG00005002860	LOC127069930	Odorant receptor	OrthoFinder orthology transfer from: Vespula_vulgaris
+N0.HOG0000158	Ancistrocerus_nigricornis	ENSANRG00005003832	LOC107070831	odorant receptor 10a-like	OrthoFinder orthology transfer from: Polistes_dominula
+N0.HOG0000175	Vespula_vulgaris	LOC127068158	LOC127068158	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107073609	LOC107073609	uncharacterized LOC107073609	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107072833	LOC107072833	uncharacterized LOC107072833	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107068712	LOC107068712	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107072835	LOC107072835	uncharacterized LOC107072835	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107073585	LOC107073585	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107072834	LOC107072834	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107068714	LOC107068714	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107072745	LOC107072745	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107065730	LOC107065730	nose resistant to fluoxetine protein 6	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107073485	LOC107073485	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107070500	LOC107070500	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107073541	LOC107073541	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107073685	LOC107073685	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107072838	LOC107072838	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000175	Polistes_dominula	LOC107073464	LOC107073464	nose resistant to fluoxetine protein 6-like	NCBI gene table
+N0.HOG0000320	Vespula_vulgaris	LOC127072454	LOC127072454	odorant receptor 13a-like	NCBI gene table
+N0.HOG0000373	Polistes_dominula	LOC107073421	LOC107073421	uncharacterized LOC107073421	NCBI gene table
+N0.HOG0000373	Polistes_dominula	LOC107073329	LOC107073329	uncharacterized LOC107073329	NCBI gene table
+N0.HOG0000417	Polistes_dominula	LOC107072912	LOC107072912	uncharacterized LOC107072912	NCBI gene table
+N0.HOG0000417	Polistes_dominula	LOC107074036	LOC107074036	uncharacterized LOC107074036	NCBI gene table
+N0.HOG0000417	Polistes_dominula	LOC107073575	LOC107073575	uncharacterized LOC107073575	NCBI gene table
+N0.HOG0000582	Vespula_vulgaris	LOC127063515	LOC127063515	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Vespula_vulgaris	LOC127063514	LOC127063514	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107073534	LOC107073534	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107073662	LOC107073662	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107065536	LOC107065536	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107073565	LOC107073565	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107067898	LOC107067898	uncharacterized LOC107067898	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107073762	LOC107073762	uncharacterized LOC107073762	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107073564	LOC107073564	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107073596	LOC107073596	fatty acid synthase-like	NCBI gene table
+N0.HOG0000582	Polistes_dominula	LOC107071370	LOC107071370	fatty acid synthase-like	NCBI gene table
+N0.HOG0000951	Polistes_dominula	LOC107071412	LOC107071412	uncharacterized LOC107071412	NCBI gene table
+N0.HOG0000951	Polistes_dominula	LOC107071411	LOC107071411	uncharacterized LOC107071411	NCBI gene table
+N0.HOG0000951	Polistes_dominula	LOC107071410	LOC107071410	uncharacterized LOC107071410	NCBI gene table
+N0.HOG0001087	Polistes_dominula	LOC107070852	LOC107070852	uncharacterized LOC107070852	NCBI gene table
+N0.HOG0001087	Polistes_dominula	LOC107063789	LOC107063789	uncharacterized LOC107063789	NCBI gene table
+N0.HOG0001490	Polistes_dominula	LOC107072329	LOC107072329	KRAB-A domain-containing protein 2-like	NCBI gene table
+N0.HOG0001490	Polistes_dominula	LOC107072130	LOC107072130	KRAB-A domain-containing protein 2-like	NCBI gene table
+N0.HOG0001490	Polistes_dominula	LOC107072644	LOC107072644	KRAB-A domain-containing protein 2-like	NCBI gene table
+N0.HOG0001933	Polistes_dominula	LOC107073440	LOC107073440	uncharacterized LOC107073440	NCBI gene table
+N0.HOG0001933	Polistes_dominula	LOC107073558	LOC107073558	uncharacterized LOC107073558	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073285	LOC107073285	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073698	LOC107073698	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073702	LOC107073702	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073482	LOC107073482	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073481	LOC107073481	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073719	LOC107073719	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073538	LOC107073538	platelet glycoprotein V-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073603	LOC107073603	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073625	LOC107073625	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073537	LOC107073537	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073720	LOC107073720	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073287	LOC107073287	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107063618	LOC107063618	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073682	LOC107073682	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107063620	LOC107063620	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107072687	LOC107072687	uncharacterized LOC107072687	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107072706	LOC107072706	neurofilament heavy polypeptide-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107072711	LOC107072711	carboxypeptidase N subunit 2-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073739	LOC107073739	toll-like receptor 4	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073281	LOC107073281	carboxypeptidase N subunit 2-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073480	LOC107073480	leucine-rich repeat-containing protein 15-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073479	LOC107073479	protein toll-like	NCBI gene table
+N0.HOG0002073	Polistes_dominula	LOC107073286	LOC107073286	leucine-rich repeat-containing protein 15-like	NCBI gene table
+N0.HOG0002263	Polistes_dominula	LOC107073757	LOC107073757	piggyBac transposable element-derived protein 4-like	NCBI gene table
+N0.HOG0002263	Polistes_dominula	LOC107067509	LOC107067509	uncharacterized LOC107067509	NCBI gene table
+N0.HOG0002570	Polistes_dominula	LOC107064220	LOC107064220	uncharacterized LOC107064220	NCBI gene table
+N0.HOG0002570	Polistes_dominula	LOC107073500	LOC107073500	uncharacterized LOC107073500	NCBI gene table
+N0.HOG0008387	Polistes_dominula	LOC107066683	LOC107066683	uncharacterized LOC107066683	NCBI gene table
+N0.HOG0008387	Polistes_dominula	LOC107069067	LOC107069067	uncharacterized LOC107069067	NCBI gene table
+N0.HOG0008387	Polistes_dominula	LOC107072109	LOC107072109	uncharacterized LOC107072109	NCBI gene table
+N0.HOG0008387	Polistes_dominula	LOC107073584	LOC107073584	uncharacterized LOC107073584	NCBI gene table
+N0.HOG0008387	Polistes_dominula	LOC107069571	LOC107069571	uncharacterized LOC107069571	NCBI gene table
+N0.HOG0009146	Polistes_dominula	LOC107072110	LOC107072110	craniofacial development protein 2-like	NCBI gene table
+N0.HOG0009146	Polistes_dominula	LOC107073532	LOC107073532	craniofacial development protein 2-like	NCBI gene table
+N0.HOG0009146	Polistes_dominula	LOC107072264	LOC107072264	uncharacterized LOC107072264	NCBI gene table
+N0.HOG0009146	Polistes_dominula	LOC107073461	LOC107073461	craniofacial development protein 2-like	NCBI gene table
+N0.HOG0009837	Polistes_dominula	LOC107067368	LOC107067368	uncharacterized LOC107067368	NCBI gene table
+N0.HOG0009964	Polistes_dominula	LOC107073640	LOC107073640	uncharacterized LOC107073640	NCBI gene table
+N0.HOG0010280	Polistes_dominula	LOC107073438	LOC107073438	uncharacterized LOC107073438	NCBI gene table
+N0.HOG0010280	Polistes_dominula	LOC107073536	LOC107073536	uncharacterized LOC107073536	NCBI gene table

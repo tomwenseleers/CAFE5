@@ -29,3 +29,14 @@ for name in ['hog_gene_counts.tsv','hog_gene_counts_large.tsv']:
 if discrepancies:raise ValueError('Counts differ from original preparation: '+str(discrepancies[:5]))
 audit={'source_rows':len(raw),'observed_families':len(rows),'omitted_all_zero_rows':len(empty),'single_species_families':sum(sum(x>0 for x in r[2:])==1 for r in rows),'differential_gt20_families':sum(max(r[2:])-min(r[2:])>20 for r in rows),'maximum_count':max(max(r[2:]) for r in rows),'original_prepared_families':len(original),'shared_count_discrepancies':discrepancies,'extra_multispecies_families':[h for h,x in index.items() if h not in original and sum(v>0 for v in x.values())>1],'policy':'All observed families enter one fit, including TE-associated, single-species, large, and potentially root-zero families. TE exclusion applies only to separately labelled biological summaries.','sha256':{str(x.resolve()):hashlib.sha256(x.read_bytes()).hexdigest() for x in [source,tree,a.output/'N0_counts.tsv']}}
 (a.output/'input_audit.json').write_text(json.dumps(audit,indent=2)+'\n');print(json.dumps({k:v for k,v in audit.items() if k!='sha256'},indent=2))
+# Audit the broader family-construction ascertainment, without pretending to know
+# an exact inclusion rule for the complete orthology pipeline.
+species=[k for k in raw[0] if k not in ['HOG','OG','Gene Tree Parent Clade']]
+one_gene=one_species=tip_one=outside=0
+for r in raw:
+ c={sp:len([g for g in r[sp].split(',') if g.strip()]) for sp in species}
+ one_gene+=sum(c.values())==1;one_species+=sum(v>0 for v in c.values())==1
+ if sum(c[sp] for sp in taxa)==1:
+  tip_one+=1;outside+=sum(c[sp] for sp in species if sp not in taxa)>0
+ascertainment={'source_species':len(species),'source_HOGs':len(raw),'source_HOGs_with_exactly_one_gene':one_gene,'source_HOGs_occupied_in_one_species':one_species,'retained_HOGs_with_exactly_one_gene_in_17tips':tip_one,'of_these_also_present_outside_17tips':outside,'interpretation':'Conditioning on nonzero observations in 17 tips does not reproduce the larger HOG-construction ascertainment. This may contribute to predictive mismatch; it is not a demonstrated exclusive cause or an exact characterization of OrthoFinder inclusion rules.'}
+(a.output/'HOG_ascertainment_audit.json').write_text(json.dumps(ascertainment,indent=2)+'\n')

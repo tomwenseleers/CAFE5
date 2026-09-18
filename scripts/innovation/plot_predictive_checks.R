@@ -8,7 +8,11 @@ labels <- c('Fraction observed in one species','Fraction observed in all 17 spec
             'Mean number of species occupied','Fraction with count differential >20')
 x <- x[match(keep,x$feature),]
 stopifnot(!anyNA(x$feature))
-pdf(args[2],width=9,height=6)
+if(grepl('\\.png$',args[2],ignore.case=TRUE)) {
+  png(args[2],width=1350,height=900,res=150)
+} else {
+  pdf(args[2],width=9,height=6)
+}
 par(mfrow=c(2,2),mar=c(3,4,3,1))
 for(i in seq_len(nrow(x))) {
   z <- x[i,]

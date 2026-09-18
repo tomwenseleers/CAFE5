@@ -1,0 +1,37 @@
+{
+  "Node3": {
+    "manuscript_node": "20",
+    "descendants": [
+      "Dolichovespula_media",
+      "Dolichovespula_saxonica",
+      "Dolichovespula_sylvestris",
+      "Mischocyttarus_mexicanus",
+      "Polistes_canadensis",
+      "Polistes_dominula",
+      "Polistes_exclamans",
+      "Polistes_fuscatus",
+      "Vespa_crabro",
+      "Vespa_mandarinia",
+      "Vespa_velutina",
+      "Vespula_germanica",
+      "Vespula_pensylvanica",
+      "Vespula_vulgaris"
+    ],
+    "parent": "Node1"
+  },
+  "Node13": {
+    "manuscript_node": "25",
+    "descendants": [
+      "Dolichovespula_media",
+      "Dolichovespula_saxonica",
+      "Dolichovespula_sylvestris",
+      "Vespa_crabro",
+      "Vespa_mandarinia",
+      "Vespa_velutina",
+      "Vespula_germanica",
+      "Vespula_pensylvanica",
+      "Vespula_vulgaris"
+    ],
+    "parent": "Node3"
+  }
+}

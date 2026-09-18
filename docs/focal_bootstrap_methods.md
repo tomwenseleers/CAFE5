@@ -24,16 +24,15 @@ For observed family y and fitted parameters theta, the family statistic is
     S(y; theta) = log Pr_theta(Y=y | Y is not all zero).
 
 Its p-value is the inclusive lower tail under the fitted population of observed
-families. The original branch sensitivity statistic is
+families. The posterior-mean branch statistic is
 
     T_b(y; theta) = E_theta[N_child - N_parent | Y=y].
 
 Root states, gamma categories, and annotation error are marginalized in this
-expectation. For this sensitivity statistic, the branch p-value is twice the smaller inclusive
+expectation. For this statistic, the branch p-value is twice the smaller inclusive
 tail, capped at 1.
 
-The primary branch comparison uses a transition-surprise statistic closer to the
-manuscript's transition-based question. Let i and j be the marginal-posterior MAP
+An experimental branch sensitivity comparison uses a transition-surprise statistic. Let i and j be the marginal-posterior MAP
 counts at the parent and child, and w_k(y) the family posterior gamma-category
 weights. Define
 
@@ -41,15 +40,21 @@ weights. Define
     U_b = sum_k w_k(y) Pr_k(N_child >= j | N_parent=i),
     R_b = -log min(1, 2 min(L_b, U_b)).
 
-The primary branch p-value is the inclusive **upper simulated tail of R_b**.
+Its branch p-value is the inclusive **upper simulated tail of R_b**.
 The quantity inside the logarithm is NOT itself claimed to be a calibrated
 p-value: counts and category weights were inferred from the same observations.
 That entire inference procedure is repeated on the bootstrap data. The upper
 transition tail includes mass beyond the finite numerical cap. Direction and
-integer count change use j-i. The requested primary calls require family p <
+integer count change use j-i. The reported transition flags require family p <
 0.05, calibrated transition-surprise branch p < 0.01, and j-i != 0. Both this
-statistic and the posterior-mean sensitivity are reported, rather than choosing
+statistic and the posterior-mean test are reported, rather than choosing
 between them based on which reproduces more manuscript results.
+
+**Final empirical audit:** separate marginal MAP states can give an apparent
+expansion even when its posterior probability is only 0.019 (N0.HOG0010041).
+Consequently, the transition statistic must not be used alone as a directional
+expansion/contraction test. Both statistics and their original thresholds are
+retained for audit; see the [completed report](validation/N0_17species/README.md).
 
 These are population-model tail tests. The branch null is not literal absence of
 all gains and losses on that branch. In particular, the branch p-value is not the

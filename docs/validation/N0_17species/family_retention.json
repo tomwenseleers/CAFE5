@@ -1,0 +1,13 @@
+{
+  "families": 12577,
+  "root_MAP_zero": 3608,
+  "root_Pzero_gt_0.95": 211,
+  "differential_gt20_retained": 56,
+  "largest_family": {
+    "HOG": "N0.HOG0000119",
+    "max_count": 141,
+    "differential": 141,
+    "root_MAP_zero": false
+  },
+  "zero_root_families_excluded": 0
+}

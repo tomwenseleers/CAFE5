@@ -1,0 +1,74 @@
+{
+  "source_commit": "2d8c97f65636ff1e775bbd9704cd5a8687087004",
+  "engine": "/tmp/cafe-bdi-native-build/cafe5",
+  "build_flags": "Release -march=native -mprefer-vector-width=512",
+  "binary_sha256": "4abc73c95b1df7d3da9cf0132f472dc324eff627e0389268560eb2cebf48ef3a",
+  "native_vs_portable_check": [
+    {
+      "build": "native",
+      "seconds": 13.177153962000375,
+      "NLL": 103192.17409415338,
+      "truncation_pass": "1"
+    },
+    {
+      "build": "portable",
+      "seconds": 16.579070050000155,
+      "NLL": 103192.17409415341,
+      "truncation_pass": "1"
+    }
+  ],
+  "gamma_quantile_check": [
+    {
+      "alpha": 0.05,
+      "max_absolute_error": 8.357847747220148e-11,
+      "max_relative_error": 1.4778954060545857e-08
+    },
+    {
+      "alpha": 0.052,
+      "max_absolute_error": 1.5707080081028835e-10,
+      "max_relative_error": 2.8627053616503417e-08
+    },
+    {
+      "alpha": 0.06,
+      "max_absolute_error": 2.6646240769423457e-11,
+      "max_relative_error": 2.588272929315849e-10
+    },
+    {
+      "alpha": 0.06701451026089139,
+      "max_absolute_error": 1.3949374988442287e-10,
+      "max_relative_error": 1.1978601444084802e-09
+    },
+    {
+      "alpha": 0.09,
+      "max_absolute_error": 1.929283399704218e-10,
+      "max_relative_error": 1.1346953199264931e-07
+    },
+    {
+      "alpha": 0.1243987325534752,
+      "max_absolute_error": 1.3147016808545686e-10,
+      "max_relative_error": 1.6706397376609061e-09
+    },
+    {
+      "alpha": 0.3,
+      "max_absolute_error": 2.3539845628306466e-08,
+      "max_relative_error": 1.1819891843067865e-08
+    },
+    {
+      "alpha": 1.0,
+      "max_absolute_error": 3.9413283747791183e-10,
+      "max_relative_error": 4.2471226535667483e-10
+    },
+    {
+      "alpha": 10.0,
+      "max_absolute_error": 1.1014438250356307e-09,
+      "max_relative_error": 9.18542242267506e-10
+    },
+    {
+      "alpha": 100.0,
+      "max_absolute_error": 5.181128859277351e-10,
+      "max_relative_error": 5.087102961098822e-10
+    }
+  ],
+  "optimization_note": "Initial empirical NLL103192.17409415341 was a local optimum. The final solution NLL103063.84181613645 was recovered from three further starts. Superseded bootstrap files are retained outside this final directory.",
+  "analysis_scripts_commit": "592290e21c020f6aa1ff1b6bc452bab13edb0305"
+}

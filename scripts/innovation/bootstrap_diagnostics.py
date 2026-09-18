@@ -13,7 +13,7 @@ observed=features(a.observed_counts);fits=[];predictive=[]
 for directory in sorted(a.bootstrap.glob('replicate_*')):
  if not (directory/'audit.json').exists():continue
  audit=json.loads((directory/'audit.json').read_text());fit=audit['fit']
- fits.append({'replicate':audit['replicate'],'seconds':audit['seconds'],'max_observed':audit['observed_max'],'cap':audit['cap'],**{key:fit.get(key,'') for key in ['lambda','nu','alpha','epsilon','root_mean','negative_log_likelihood','optimizer_converged','truncation_nll_difference','truncation_pass','root_mean_estimated']}})
+ fits.append({'replicate':audit['replicate'],'seconds':audit['seconds'],'max_observed':audit['observed_max'],'cap':audit['cap'],**{key:fit.get(key,'') for key in ['lambda','nu','alpha','epsilon','root_mean','alpha_at_bound','alpha_identifiable','boundary_fits','negative_log_likelihood','optimizer_converged','truncation_nll_difference','truncation_pass','root_mean_estimated']}})
  predictive.append(features(directory/'null_simulated.tsv'))
 if not fits:raise RuntimeError('No completed fits')
 with (a.bootstrap/'bootstrap_fit_summary.tsv').open('w') as f:

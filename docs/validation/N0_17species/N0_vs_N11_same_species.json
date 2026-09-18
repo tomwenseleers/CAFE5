@@ -1,0 +1,40 @@
+{
+  "species": [
+    "Ancistrocerus_nigricornis",
+    "Mischocyttarus_mexicanus",
+    "Polistes_dominula",
+    "Polistes_fuscatus",
+    "Polistes_exclamans",
+    "Polistes_canadensis",
+    "Vespula_germanica",
+    "Vespula_pensylvanica",
+    "Vespula_vulgaris",
+    "Vespa_crabro",
+    "Vespa_mandarinia",
+    "Vespa_velutina",
+    "Dolichovespula_media",
+    "Dolichovespula_saxonica",
+    "Dolichovespula_sylvestris"
+  ],
+  "N11_node_matches_15_Vespidae": true,
+  "N11_genes_outside_Vespidae": 0,
+  "N0_pruned_to_same_15_species": {
+    "families": 12090,
+    "one_copy_in_all_15_species": 3886,
+    "at_most_one_copy_per_species": 8122,
+    "one_copy_total_in_15_species": 633,
+    "occupied_in_one_species": 1309,
+    "mean_occupied_species": 11.160794044665012,
+    "maximum_count": 141
+  },
+  "N11_same_15_species": {
+    "families": 13836,
+    "one_copy_in_all_15_species": 4096,
+    "at_most_one_copy_per_species": 9929,
+    "one_copy_total_in_15_species": 1067,
+    "occupied_in_one_species": 1766,
+    "mean_occupied_species": 10.358412836079792,
+    "maximum_count": 145
+  },
+  "interpretation": "Strict single-copy means one in every species; this differs from a family containing just one observed gene in total. Changing HOG level changes the evolutionary unit and does not by itself repair model ascertainment."
+}

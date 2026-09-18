@@ -8,6 +8,11 @@ The extension also supports [gamma variation, annotation error and branch
 bootstrap tests](docs/innovation_mixtures_and_branches.md). The standard CAFE5 mode
 remains available.
 
+The [completed N0 / 17-species comparison](docs/validation/N0_17species/README.md)
+includes 24 whole-dataset bootstrap refits, nominal 0.01/0.05 branch comparisons,
+and N11 diagnostics. Substantial predictive mismatch prevents treating these
+experimental results as validated replacement biological conclusions.
+
 # CAFE
 
 <div>
@@ -925,4 +930,3 @@ ideas. Thanks to:
 CAFE uses the EasyLogging logging framework. https://github.com/amrayn/easyloggingpp
 
 CAFE uses the DocTest testing framework. https://github.com/onqtam/doctest
-

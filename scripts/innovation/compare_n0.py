@@ -74,6 +74,6 @@ def main():
  summary={}
  for node in mapping:
   sub=[r for r in out if r['Node']==node];oldsub=[r for r in sub if r['manuscript_significant']]
-  summary[node]={'manuscript_node':mapping[node],'manuscript_counts':dict(collections.Counter(r['manuscript_direction'] for r in oldsub)),'new_all_counts':dict(collections.Counter(r['direction'] for r in selected if r['Node']==node)),'new_nonTE_counts':dict(collections.Counter(r['direction'] for r in nonte if r['Node']==node)),'same_direction_replicated':sum(r['same_direction_replication'] for r in oldsub),'MC_uncertain_selected':sum(r['selected_raw_thresholds']=='True' and r['MC_threshold_uncertain']=='True' for r in sub)}
+  summary[node]={'manuscript_node':mapping[node],'manuscript_counts':dict(collections.Counter(r['manuscript_direction'] for r in oldsub)),'new_all_counts':dict(collections.Counter(r['direction'] for r in selected if r['Node']==node)),'new_nonTE_counts':dict(collections.Counter(r['direction'] for r in nonte if r['Node']==node)),'same_direction_replicated':sum(r['same_direction_replication'] and not r['TE_related'] for r in oldsub),'same_direction_replicated_all':sum(r['same_direction_replication'] for r in oldsub),'MC_uncertain_selected':sum(r['selected_raw_thresholds']=='True' and r['MC_threshold_uncertain']=='True' for r in sub)}
  (a.output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n');print(json.dumps(summary,indent=2))
 if __name__=='__main__':main()

@@ -1,0 +1,3 @@
+node	statistic	family_threshold	branch_threshold	manuscript_events	new_nonTE_events	shared_same_direction	manuscript_recall	new_set_overlap	Jaccard
+20	transition	0.05	0.05	12	139	11	0.916666666666667	0.079136690647482	0.0785714285714286
+25	transition	0.05	0.05	10	103	8	0.8	0.0776699029126214	0.0761904761904762

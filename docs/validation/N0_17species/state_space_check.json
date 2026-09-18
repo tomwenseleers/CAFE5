@@ -1,0 +1,11 @@
+{
+  "families": 12577,
+  "branches_compared": 402464,
+  "caps": [
+    180,
+    360
+  ],
+  "focal_MAP_change_disagreements": [],
+  "focal_max_abs_mean_difference": 0.0,
+  "focal_max_abs_transition_score_difference": 0.0
+}

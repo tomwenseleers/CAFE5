@@ -1,0 +1,33 @@
+{
+  "method": "pooled_refitted_parametric_bootstrap",
+  "replicates": 24,
+  "interior_refits": true,
+  "boundary_audits": 2,
+  "families_per_dataset": 12577,
+  "seed": 920100,
+  "nodes": [
+    "Node3",
+    "Node13"
+  ],
+  "parameters": {
+    "lambda": 0.014342555224354459,
+    "nu": 0.0003078141237777608,
+    "alpha": 0.06701451026089139,
+    "epsilon": 0.018850386882690306
+  },
+  "root_mean": "0.54075262082529418",
+  "root_mean_estimated": "1",
+  "null": "Exchangeable observed family from fitted global BDI+gamma+error model. Not a branch-specific no-change null.",
+  "pooling": "CDF averages over all families per full simulated dataset. Dataset is the independent unit for MC standard errors.",
+  "family_statistic": "Conditional log probability of complete observed tip pattern; lower tail.",
+  "branch_statistic": "Primary: upper tail of posterior-category-weighted transition surprise at marginal-MAP parent/child counts. Sensitivity: doubled minimum tail of posterior mean change.",
+  "selection": "All nonzero observed families; no size or root-state filtering.",
+  "thresholds": {
+    "family": 0.05,
+    "branch_two_sided": 0.01
+  },
+  "MC_intervals": "Approximate pointwise 95% Student-t intervals across independent simulated datasets; not simultaneous and not biological confidence intervals.",
+  "tree_sha256": "db5a79ea9c8f84bdb1878a03d9ff2b4c5615840a47869071c0e0e3e3554626f3",
+  "observed_family_results_sha256": "3b7531fec0ef595df3f34e20ccd28bbd1ea5dd31d6447ac42c7a7f4195acea81",
+  "binary_sha256": "4abc73c95b1df7d3da9cf0132f472dc324eff627e0389268560eb2cebf48ef3a"
+}
