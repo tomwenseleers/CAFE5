@@ -1,0 +1,7 @@
+{
+  "generating_root_mean": 1.4,
+  "estimated_root_mean": 1.4024472551901936,
+  "families": 4000,
+  "fixed_law_likelihood_difference": 0.0,
+  "limitations": "Root-only recovery with other parameters fixed; does not establish five-parameter identifiability."
+}

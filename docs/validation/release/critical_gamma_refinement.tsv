@@ -1,0 +1,2 @@
+face_lambda	face_nu	face_epsilon	start	lambda	nu	alpha	epsilon	nll	iterations	converged	root_mean	mu	epsilon_zero	root_zero	root_shape
+-1	0	-1	0	0.25609335677965639	0	0.11788992554885704	0.025534648539533418	95606.972266104713	79	1	0	0.25609335677965639	-1	0	1

@@ -350,11 +350,42 @@ struct Engine {
         if(keep) *keep=std::move(v);
         return z>0?std::log(z)+scale:-INF;
     }
+    // Positive recursion for the event that at least one observed tip is nonzero.
+    // Computing 1-P(all zero) loses all precision for rare-observation populations.
+    // z/u track zero/nonzero observations on paths within the finite latent cap;
+    // no transition row is renormalized. Enlarged-cap checks control omitted paths.
+    double observed_log_probability() const {
+        std::vector<Vec> z(nodes.size(),Vec(s,1)),u(nodes.size(),Vec(s,0));
+        for(int i=int(nodes.size())-1;i>=0;--i) {
+            if(nodes[i].leaf>=0) {
+                for(int j=0;j<s;++j) {
+                    z[i][j]=0;auto probabilities=error.probabilities(j);
+                    for(size_t d=0;d<error.deltas.size();++d) {
+                        if(j+error.deltas[d]==0)z[i][j]+=probabilities[d];
+                        else if(j+error.deltas[d]>0)u[i][j]+=probabilities[d];
+                    }
+                }
+            } else for(int c:nodes[i].children) {
+                const auto& a=matrices.at(nodes[c].time);
+                for(int j=0;j<s;++j) {
+                    double cz=0,cu=0;const double* row=&a[size_t(j)*s];
+                    #pragma omp simd reduction(+:cz,cu)
+                    for(int k=0;k<s;++k) {cz+=row[k]*z[c][k];cu+=row[k]*u[c][k];}
+                    u[i][j]=u[i][j]*(cz+cu)+z[i][j]*cu;
+                    z[i][j]*=cz;
+                }
+            }
+        }
+        double mass=std::inner_product(prior.begin(),prior.end(),u[0].begin(),0.);
+        return mass>0?std::log(mass):-INF;
+    }
     double inclusion_log() const {
-        if(!conditioned) return 0;
-        double logzero=prune(std::vector<int>(taxa.size(),0));
-        if(logzero>=0) return -INF;
-        return std::log(-std::expm1(logzero));
+        if(!conditioned)return 0;
+        double zero=prune(std::vector<int>(taxa.size(),0));
+        // Away from cancellation, the complement includes arbitrarily large
+        // observed tip counts without having to represent them under the cap.
+        // Near one, use the positive recursion to preserve rare-event precision.
+        return zero<-.01?std::log(-std::expm1(zero)):observed_log_probability();
     }
     double nll(double l,double n,double m=-1) {
         if(l<0||n<0||!std::isfinite(l)||!std::isfinite(n)) return INF;
@@ -581,8 +612,11 @@ struct Model:Engine {
     double prune(const std::vector<int>& y) const {return logsum(category_logs(y));}
     double inclusion_log() const {
         if(!observed_condition) return 0;
-        double z=prune(std::vector<int>(taxa.size(),0));
-        return z<0?std::log(-std::expm1(z)):-INF;
+        double zero=prune(std::vector<int>(taxa.size(),0));
+        if(zero<-.01)return std::log(-std::expm1(zero));
+        Vec logs(rates.size());
+        for(size_t k=0;k<rates.size();++k)logs[k]=std::log(weights[k])+component(k)->observed_log_probability();
+        return logsum(logs);
     }
     double nll(double l,double n,double a=1,double e=0,double m=-1,double e0=-1) {
         if(l<0||n<0||e<0||e>=.5||!std::isfinite(l)||!std::isfinite(n)||!std::isfinite(a)||!std::isfinite(e)||
@@ -591,7 +625,10 @@ struct Model:Engine {
         size_t active=l==0&&(m<0||m==0)?1:rates.size();
         for(size_t k=0;k<active;++k) component(k)->nll(l*rates[k],n,(m<0?l:m)*rates[k]);
         double inc;
-        if(active==1) {double z=Engine::prune(std::vector<int>(taxa.size(),0));inc=observed_condition?(z<0?std::log(-std::expm1(z)):-INF):0;}
+        if(active==1) {
+            double zero=Engine::prune(std::vector<int>(taxa.size(),0));
+            inc=observed_condition?(zero<-.01?std::log(-std::expm1(zero)):Engine::observed_log_probability()):0;
+        }
         else inc=inclusion_log();
         if(!std::isfinite(inc))return INF;
         double score=0;
@@ -707,7 +744,7 @@ static void usage() {
       "--matrix-time T --matrix-output FILE --lambda L --nu N: export transition matrix\n"
       "--gamma-cats K (1, maximum 128); --alpha A (otherwise estimated when K>1)\n"
       "--epsilon E (fixed) OR --estimate-epsilon OR --error-model FILE\n"
-      "Gamma scales duplication/loss only; branch-specific rates and legacy p-values are unsupported.\n";
+      "Gamma scales duplication/loss only. Global evolutionary rates; use scripts/innovation/analyze.py for refitted family and branch tests.\n";
 }
 int run(int argc,char *const argv[]) {
     try {
@@ -801,6 +838,7 @@ int run(int argc,char *const argv[]) {
         e.set_rates(f.l,f.n,f.a,f.e,f.mu,f.e0); double inc=e.inclusion_log();
         auto report=output(o.prefix+"_results.tsv");
         report<<"parameter\tvalue\nmodel\t"<<((o.mu>=0||o.estimate_mu)?"BDI_separate_birth_death":"BDI_equal_birth_death")<<"\nlambda\t"<<f.l<<"\nnu\t"<<f.n<<"\nnegative_log_likelihood\t"<<f.score
+          <<"\nlambda_estimated\t"<<(o.lambda<0)<<"\nnu_estimated\t"<<(o.nu<0)<<"\nepsilon_estimated\t"<<o.estimate_epsilon<<"\nalpha_estimated\t"<<(o.categories>1&&o.alpha<0)
           <<"\nfamilies\t"<<e.families.size()<<"\nunique_patterns\t"<<e.patterns.size()<<"\nmax_count\t"<<o.maximum
           <<"\ngamma_categories\t"<<o.categories<<"\nalpha\t"<<f.a<<"\nepsilon\t"<<f.e<<"\nerror_model_file\t"<<o.error_file<<"\nalpha_at_bound\t"<<(o.categories>1&&(f.a<.0501||f.a>99.99))
           <<"\nalpha_identifiable\t"<<(o.categories>1&&(f.l>0||f.mu>0))
@@ -809,7 +847,7 @@ int run(int argc,char *const argv[]) {
           <<"\nconditioned_on_observed\t"<<e.observed_condition<<"\nlog_inclusion_probability\t"<<inc
           <<"\nboundary_fits\t"<<o.boundary_fits<<"\noptimizer_converged\t"<<f.converged<<"\ntruncation_nll_difference\t"<<delta
           <<"\ntruncation_pass\t"<<(o.check&&std::isfinite(delta)&&std::abs(delta)<.01)
-          <<"\nseed\t"<<o.seed<<"\nsignificance_status\t"<<((o.mu>=0||o.estimate_mu||f.e0>=0||o.root_family!="poisson")?"extended_model_requires_matching_calibrated_bootstrap_driver":"use_branch_bootstrap_driver_for_calibrated_tail_tests")<<"\n";
+          <<"\nseed\t"<<o.seed<<"\nsignificance_status\t"<<"use_refitted_bootstrap_workflow_for_family_and_branch_tests"<<"\n";
         if(o.likelihood_only) {
             if(o.bootstrap) throw std::runtime_error("--likelihood-only cannot be combined with --bootstrap");
             std::cout<<"BDI lambda="<<f.l<<" nu="<<f.n<<" nll="<<f.score<<" truncation_delta="<<delta<<'\n';

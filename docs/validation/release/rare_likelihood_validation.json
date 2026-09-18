@@ -1,0 +1,51 @@
+[
+  {
+    "root_mean": 0.01,
+    "inclusion_probability": 0.018820637757193996,
+    "nll_expected": 2.5067079599172035,
+    "nll_actual": 2.5067079599171898,
+    "absolute_error": 1.3766765505351941e-14
+  },
+  {
+    "root_mean": 0.00526,
+    "inclusion_probability": 0.009944225934008517,
+    "nll_expected": 2.49768215297521,
+    "nll_actual": 2.4976821529752096,
+    "absolute_error": 4.440892098500626e-16
+  },
+  {
+    "root_mean": 0.00527,
+    "inclusion_probability": 0.009963036815011839,
+    "nll_expected": 2.49770118180981,
+    "nll_actual": 2.497701181809811,
+    "absolute_error": 8.881784197001252e-16
+  },
+  {
+    "root_mean": 1e-08,
+    "inclusion_probability": 1.89999998195e-08,
+    "nll_expected": 2.4876805956707257,
+    "nll_actual": 2.4876805956707244,
+    "absolute_error": 1.3322676295501878e-15
+  },
+  {
+    "root_mean": 1e-16,
+    "inclusion_probability": 1.8999999999999998e-16,
+    "nll_expected": 2.487680576670726,
+    "nll_actual": 2.4876805766707193,
+    "absolute_error": 6.661338147750939e-15
+  },
+  {
+    "root_mean": 1e-30,
+    "inclusion_probability": 1.9e-30,
+    "nll_expected": 2.4876805766707255,
+    "nll_actual": 2.487680576670712,
+    "absolute_error": 1.3322676295501878e-14
+  },
+  {
+    "root_mean": 1e-120,
+    "inclusion_probability": 1.9e-120,
+    "nll_expected": 2.4876805766707255,
+    "nll_actual": 2.487680576670698,
+    "absolute_error": 2.7533531010703882e-14
+  }
+]

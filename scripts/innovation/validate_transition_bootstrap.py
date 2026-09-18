@@ -26,10 +26,10 @@ for r in read(Path(str(prefix)+'_branch_statistics.tsv')):
  expected=-np.log(min(1,2*min(lo,hi)));errors.append(abs(expected-float(r['transition_tail_score'])))
 assert max(errors)<2e-12,errors
 obs=a.output/'observed';run(common+['--simulate',2000,'--seed',1701,'-o',obs]);run(common+['-i',str(obs)+'_simulated.tsv','-o',obs])
-out=a.output/'reference';driver=Path(__file__).with_name('pooled_bootstrap.py')
+out=a.output/'reference';driver=Path(__file__).with_name('refitted_bootstrap.py')
 run(['python3',driver,a.binary,'--tree',tree,'--observed',obs,'--output',out,'--replicates',8,'--workers',2,'--threads',1,'--seed',1741,'--nodes','Node1','C','--minimum-cap',35,'--fixed'])
-r=read(out/'focal_tests.tsv');summary={'independent_transition_score_max_abs_error':max(errors),'heldout_null_families':2000,'reference_families':16000,'branch_threshold':.01,'branch_rejection_rates':{b:sum(float(x['branch_p'])<.01 for x in r if x['Node']==b)/2000 for b in ['Node1','C']},'family_rejection_rate':sum(float(x['family_p'])<.05 for x in r if x['Node']=='Node1')/2000,'limitations':'Known-parameter check at one regime; not certification of estimated-parameter calibration or model adequacy.'}
-summary['branch_rejection_rates_at_05']={b:sum(float(x['branch_p'])<.05 for x in r if x['Node']==b)/2000 for b in ['Node1','C']}
+r=read(out/'branch_tests.tsv');summary={'independent_transition_score_max_abs_error':max(errors),'heldout_null_families':2000,'reference_families':16000,'branch_threshold':.01,'branch_rejection_rates':{b:sum(float(x['transition_branch_p'])<.01 for x in r if x['Node']==b)/2000 for b in ['Node1','C']},'family_rejection_rate':sum(float(x['family_p'])<.05 for x in r if x['Node']=='Node1')/2000,'limitations':'Known-parameter check at one regime; not certification of estimated-parameter calibration or model adequacy.'}
+summary['branch_rejection_rates_at_05']={b:sum(float(x['transition_branch_p'])<.05 for x in r if x['Node']==b)/2000 for b in ['Node1','C']}
 assert all(v<.025 for v in summary['branch_rejection_rates'].values()),summary
 assert all(v<.075 for v in summary['branch_rejection_rates_at_05'].values()),summary
 assert summary['family_rejection_rate']<.075,summary

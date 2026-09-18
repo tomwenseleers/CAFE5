@@ -1,21 +1,21 @@
-## Experimental innovation model
+# CAFE5 with birth–death–innovation inference
 
-This fork adds opt-in `cafe5 --innovation` for joint estimation of a global
-duplication/loss rate and an innovation rate, including root count zero and
-observed-family ascertainment correction. See [model and usage](docs/innovation.md)
-and [validation status](docs/innovation_validation.md).
-The extension also supports [gamma variation, annotation error and branch
-bootstrap tests](docs/innovation_mixtures_and_branches.md). The standard CAFE5 mode
-remains available.
+The `innovation-bdi` branch adds unequal duplication/loss, innovation from zero,
+gamma family heterogeneity, estimated count error, and refitted bootstrap family
+and branch tests. The primary workflow needs a CAFE count table and rooted tree:
 
-The [completed N0 / 17-species comparison](docs/validation/N0_17species/README.md)
-includes 24 whole-dataset bootstrap refits, nominal 0.01/0.05 branch comparisons,
-and N11 diagnostics. Substantial predictive mismatch prevents treating these
-experimental results as validated replacement biological conclusions.
+```bash
+python3 scripts/innovation/analyze.py counts.tsv tree.nwk
+```
 
-The [N11 improvement experiment](docs/model_improvement_plan.md) compares
-[optional unequal rates, hurdle roots and separate zero-to-one error](docs/model_improvement_methods.md).
-These models require their own predictive validation before branch inference.
+See [installation, assumptions and command examples](docs/innovation.md),
+[mathematical comparison with standard CAFE5](docs/innovation_mathematics.md),
+[fit evidence](docs/innovation_benchmark.md), and
+[bootstrap validation and interpretation](docs/focal_bootstrap_methods.md).
+The documented preset fixes the root count to one; `--root poisson` allows root
+zero. P values are nominal, without automatic FDR correction. Innovation mode
+uses global evolutionary rates; branch significance is supported, but separate
+lineage rate parameters are not. The original CAFE5 interface is retained below.
 
 # CAFE
 
